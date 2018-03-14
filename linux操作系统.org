@@ -1,0 +1,424 @@
+#+TITLE: Linux 基础教程
+
+* 虚拟机
+** VirtualBox
+** VMWare Station
+安装步骤
+
+* 常用的命令
+** 文档
+--help
+
+man(manual)
+
+info(information)
+
+** ls(list)
+用来列出文件夹的内容
+
+** passwd
+更改用户密码
+
+** su
+切换到超级用户
+
+** sudo
+临时切换到超级用户并做一些操作。操作完成之后返回原先用户的环境。
+
+** gedit
+linux 之下存在的一个简单编辑器，类似于 windows 下面的 notepad
+
+: sudo gedit /etc/apt/sources.list
+
+: su
+: vim /etc/apt/sources.list
+
+** cp(copy)
+: cp /etc/apt/sources.list ~/sources.list
+
+
+** rm(remove)
+: rm -rf / ttt  # 要不得
+
+** mkdir/rmdir
+mkdir 是用来创建文件
+
+rmdir 默认只能删除空的文件夹，如果想要删除文件夹连带下面内容的话，那么用 rm -r dir 来表示。这是为了安全！
+
+** cat/head/tail/more/less
+查看文件内容
+
+** grep
+用来过滤内容，可以使用正则表达式。经常跟 "|" 通道结合使用。例如：
+: ls /etc | grep "java"
+表示的是，显示 /etc 文件夹下名字中包含 "java" 字符串的文件夹
+
+** find
+用来查找某个文件夹下面的内容。即搜索。
+
+比如，我们想查找 /etc 下面所有的 xml 文件，语法为:
+: find /etc -type f -name "*.xml"
+
+其他内容，请自行 man
+
+** tar/zip
+
+要想把一堆文件归档成一个单独的文件（方便管理），需要用到 tar 命令:
+: tar -c -f xxx.tar a.txt b.txt c.txt
+: tar -cf xxx.tar *.txt
+: tar cf xxx.tar *.txt
+
+tar 命令，只是把分散的文件，拼接成一个完整的文件，但没有做任何的压缩处理。
+
+
+如果想压缩的话，就需要用到相关的压缩命令。拿 gzip 来示例：
+: gzip xxx.tar
+
+
+如果，想一步到位，压缩加归档的话：
+: tar --create --verbose --zip --file xxx.tar.gz a.txt b.txt c.txt
+: tar czvf xxx.tar.gz *.txt
+
+如果想要解压的话：
+: tar xzvf xxx.tar.gz
+
+
+
+
+** 任务相关
+
+将当前任务挂起，即放到后台
+: Ctrl-Z
+
+命令行下，查看所有被挂起的后台任务
+: jobs
+
+将挂起的某个任务，放置到前台
+: fg [任务编号]
+
+将程序以后台的方式打开，只需要在命令最后添加
+: &
+
+* 程序安装
+** apt-get update
+读取 sources.list 里面的地址，把所有可用软件的目录更新到本地
+
+** apt-cache search
+从本地目录中，查询相关的软件。支持正则表达式。
+
+** apt-get install
+讲软件下载到本地
+
+比如，下载 git
+#+BEGIN_SRC sh
+  apt-get update           # 在每次进行软件下载前，养成随手 update 的习惯
+  apt-cache search "^git"  # 查询 git 软件
+  apt-get install git      # 对 git 进行安装
+
+  git clone https://github.com/s126/notes  # 克隆我们的笔记
+#+END_SRC
+* 用户与权限
+
+文件的基本权限有:
+1. Read (读)
+2. Write (写)
+3. eXecute (执行)
+
+设置权限的层次：
+1. Owner (拥有者)
+2. Group (组)
+3. Others (其他人)
+
+** chown
+
+更改文件的 Owner（所有者）或 Group（组）
+
+: chown fish ~/abc.txt
+: chown :fish_pool ~/abc.txt
+
+** chgrp
+
+更改用户的组
+
+: chgrp fish_pool ~/abc.txt
+
+** groups
+
+创建一个组：
+: groupadd fish_pool
+
+将用户 fish 和 vip 添加到组里面：
+: gpasswd -a fish fish_pool
+: gpasswd -a vip fish_pool
+
+将 vip 移除出去:
+: gpasswd -d vip fish_pool
+
+显示当前用户所属的组（结果是一到多个）：
+: groups
+
+
+
+** chmod
+详细更改用户的权限
+
+
+第一种方式，通过 +/-/= 来添加权限
+#+BEGIN_SRC sh
+
+  # 创建一个文件
+  echo "hello, world" >> ~/hello.txt
+
+  # 如果让这个文件拥有读的权限
+  chmod +r ~/hello.txt
+  chmod -r ~/hello.txt
+
+  chmod u+r ~/hello.txt  # 拥有者
+  chmod g+r ~/hello.txt  # 组
+  chmod o+r ~/hello.txt  # 其他
+  chmod a+r ~/hello.txt  # 所有
+
+#+END_SRC
+
+第二种方式，八进制。用数字去组合各种权限，r/w/x 分别用 4/2/1 来表示。
+#+BEGIN_SRC sh
+  chmod 777 ~/hello.txt
+  chmod 644 ~/hello.txt
+#+END_SRC
+* JDK 的安装
+
+首先，选择。
+- OpenJDK
+- Oracle JDK
+
+** 安装 OpenJDK
+
+建议直接在 apt 里面安装
+
+首先，查询：
+: apt-get update
+: apt-cache search openjdk
+
+其次，安装
+: apt-get install openjdk-7-jdk
+
+也可以下载其他相关的，比如，文档、示例
+: apt-get install openjdk-7-doc
+: apt-get install openjdk-7-demo
+
+当然，如果要卸载，需要:
+: apt-get remove openjdk-7-jdk
+: apt-get purge openjdk-7-jdk
+
+卸载可以跟一些选择，比如 --purge，表示清理。自己 help 详情。
+
+查看是否安装成功：
+: java -version
+: javac -version
+: whereis java
+: which java
+** 安装 OracleJDK
+
+总共分 2 步：
+*** 第 0 步，下载
+注意，要下载跟自己的操作系统(Opertation System)相匹配的版本。
+
+查看操作系统信息，可以用 uname -a 命令。
+
+其中 x86 代表 32 位操作系统；x64 代表 64 位操作系统。
+
+*** 第 1 步，解压到相应目录(/opt/)
+按照标准，建议，把所有第三方的，所有文件都在同一个文件夹内的软件，安装到 /opt/ 目录。
+: sudo tar xzf jdk-xxx.tar.gz -C /opt/jdk1.8
+
+*** 第 2 步，设置环境变量
+在命令行下，首先，定义变量
+#+BEGIN_SRC sh
+
+  ## 首先，设置 JAVA_HOME
+  JAVA_HOME=/opt/jdk1.8
+  export JAVA_HOME
+
+  # 上面两句可以简写为
+  export JAVA_HOME=/opt/jdk1.8
+
+
+  ## 如果，相要把 java 可执行文件的路径添加到 PATH
+  export PATH=$JAVA_HOME/bin:$PATH
+
+#+END_SRC
+
+上面再命令行下运行的命令，只能在当前 terminal 里有效。如果想永久设置，将这些设置放到 ~/.bashrc 或 ~/.profile 里面。
+
+
+但是，如果在系统中存在其他版本的 java，
+你不想删除它，而且你想切换当前使用的版本为你刚安装的版本的话：
+
+第一种方式：更改 PATH 变量中，路径的先后顺序。
+
+第二种方式：利用 update-alternates 命令，设置执行程序的优先级。
+: update-alternatives --install /usr/bin/java java /opt/jdk1.8/bin/java 1
+: update-alternatives --install /usr/bin/javac javac /opt/jdk1.8/bin/javac 1
+: update-alternatives --config java
+这样，就可以通过修改优先级，来切换不同的版本了。
+
+*** All In All
+#+BEGIN_SRC sh
+  # 下载
+  wget [jdk 地址]
+
+  # 解压
+  sudo tar xzf jdk1.8.tar.gz -C /opt/
+
+  # 设置 JAVA_HOME, "vi .bashrc"
+  JAVA_HOME=/opt/jdk1.8.0_121
+  PATH=$JAVA_HOME/bin:$PATH
+  CLASSPATH=$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+#+END_SRC
+
+* Tomcat 的安装
+** 手动安装
+#+BEGIN_SRC sh
+  # 第 0 步：下载
+  wget http://mirrors.hust.edu.cn/apache/tomcat/tomcat-7/v7.0.76/bin/apache-tomcat-7.0.76.tar.gz
+
+  # 第 1 步：解压
+  sudo tar xf apache-tomcat-7.0.76 -C /opt/
+
+  # 第 2 步：配置环境变量
+  echo "CATALINA_HOME=/opt/apache-tomcat-7.0.76" >> ~/.bashrc
+  source ~/.bashrc
+
+  # 第 3 步：启动
+  sudo $CATALINA_HOME/bin/startup.sh
+
+#+END_SRC
+
+** apt 方式安装
+第一步，安装：
+: sudo apt-get install tomcat7
+
+第二部，启动：
+: service tomcat7 start
+: service tomcat7 stop/restart/status
+: 
+: # 作为一些新的系统，底层控制已换成 systemd，那么可以使用下面命令。跟上面等效:
+: systemctl start/restart/stop/status tomcat7
+: systemctl enable/disable tomcat7    # 设置是否开机启动
+
+第三步，安装其他：
+: sudo apt-get install tomcat7-docs
+: sudo apt-get install tomcat7-examples
+: sudo apt-get isntall tomcat7-admin
+* Tomcat 的基本概念
+Tomcat 服务器由四大部分组成：
+1. Coyote   : 用来监听网络，接收请求，交给相应的 Catalina 处理，并将结果返回到客户端
+2. Catalina : 实现了 J2EE 标准的 Servlet 容器，用来执行调用 Servlet。它是 tomcat 最核心的部分。
+3. Jasper   : 用来将 jsp 翻译成相应的 Servlet
+4. Cluster  : 当配置集群的时候才会有用。进行集群管理。
+
+
+相应的，在 server.xml 中，分下面几个层次
+- Server
+  - Service (一个服务是若干 Connector 和 Engine 的集合。 Connector 用来处理网络， Engine 用来执行功能)
+    - Connector (用于监听网络，并将相应的请求发送给 Engine 相应 Host 的相应 Context)
+    - Engine (一个引擎里里面包含若干 Host<本机可以多 IP，所以根据不同的 IP 地址访问不同项目>，每个 Host 包含部署的若干项目即 Context)
+
+
+*注意：*
+- tomcat 是一个服务器，它包含基本的网络处理，还有通过内置的 Servlet 容器完成对 servlet 的处理
+- tomcat 在 4.* 版本后，对容器做了重新设定，新设定的容器名字命名为 catalina，一直沿用到现在。
+- 在设置环境变量的时候，只有 CATALINA_HOME，并没有 TOMCAT_HOME。因为我们设定的是 Servlet 容器的目录。
+- 一个项目的最基本单元是 Context，在最开始的时候，只能在 server.xml 的 Host 节点里配置。
+- 但这不够科学，不够灵活。所以在后来的版本中，出现了 context.xml 配置文件，并且可以配置到多个位置，增加了配置的灵活性。
+
+* Tomcat 下的文件部署
+
+在部署之前，先弄懂几个概念：
+- CATALINA
+- CATALINA_HOME 环境变量（什么意思，占位）
+- CATALINA_BASE 环境变量（什么意思，占位）
+
+如果是手动安装的：
+: CATALINA_HOME=/opt/apache-tomcat-7
+: CATALINA_BASE=/opt/apache-tomcat-7
+
+如果是 APT 安装的：
+: CATALINA_HOME=/usr/share/tomcat7
+: CATALINA_BASE=/var/lib/tomcat7
+
+
+拿手动安装的示例，说明 CATALINA_BASE 下各文件夹的作用：
+- bin 文件夹，放置的是启动关闭等的可执行脚本文件
+- lib 文件夹，运行所需要的 jar 包
+- logs 日志文件夹，保存了运行中的各种日志。如果系统运行中出现问题，我们首先要想到来这个文件夹查看相应出错信息。
+- conf 文件夹，所有的配置文件
+- webapps 默认的项目存放文件夹。如果把 war 项目放到下面，会自动被服务器加载。
+- work 程序运行中编译的中间文件存放于此。比如，jsp 编译成的 servlet.
+
+
+如果想部署项目，下面几种方法:
+** 将符合 war 标准的文件夹或 .war 文件直接放置到 webapps 下面
+** 修改配置文件，设置 Context
+下面几种方法，分别对应不同的级别:
+1. 修改 conf/server.xml，增加或修改 Context 节点
+2. 修改 conf/context.xml，增加相应内容
+3. 修改或增加 conf/Catalina/主机名/context.xml，增加相应内容
+4. 修改或增加 conf/Catalina/主机名/名字.xml，增加相应内容
+
+如果你们装了 tomcat7-examples 等，你们可以看一下 conf/Catalina/localhost 文件夹下面是不是已经存在了相应的 xml 文件？
+这就是为什么我们能在 tomcat 启动后访问到他们的原因。
+
+比如，在 conf/Catalina/localhost/examples.xml 中，是这样的：
+#+BEGIN_SRC xml
+  <Context path="/examples" docBase="/usr/share/tomcat7-examples/examples" />
+#+END_SRC
+
+** 使用 Tomcat 提供的 Admin 管理
+首先，确保已经安装了 tomcat-admin。
+tomcat-admin 也是一个标准的 web 工程，安装完后，它存在于 /usr/share/tomcat7-admin 文件夹。
+: apt install tomcat7-admin
+
+其次，如果使用 admin 进行管理，需要登陆验证。所以我们需要添加一个用户。在 conf/tomcat-users.xml 中添加：
+#+BEGIN_SRC xml
+  <role rolename="manager-gui"/>
+  <user username="用户名" password="密码" roles="manager-gui"/>
+#+END_SRC
+
+然后，访问 localhost:8080/manager/html 就可以进入控制台，在上面进行查看并部署了。
+
+
+
+
+* SSH (Secure Shell)
+一般情况下，操作 Linux/Uninx 系统，需要通过远程连接的方式。ssh 是最常用的方式。
+
+** 服务端
+需要安装 openssh-server，这是 ssh 的服务端
+: sudo apt install openssh-server
+
+开启 ssh 服务
+: sudo service ssh start
+: sudo service ssh status
+
+** 客户端
+基本语法为：
+: ssh [选项] [用户名@]主机IP地址
+
+比如，连接 12.34.56.78 上的 fish 用户：
+: ssh fish@12.34.56.78
+
+SSH 的默认端口号为 22，如果服务器上改过端口号，则需要在连接的时候指定：
+: ssh -p 3232 fish@12.34.56.78
+
+连接上后，就可以像本地一样进行操作了。
+
+--------------
+
+如果想在服务器上，传送或下载文件，需要用到 scp 命令。它是基于 ssh 的 cp 命令。
+: scp 源文件 目的地
+
+比如，要把 miniblog.war 文件，传送到服务器：
+: scp /e/workspace/build/minilog.war test@12.34.56.78:/opt/apache-tomcat8/webapps/
+
+如果，想从服务器上下载文件，只需要将上面的两个命令互换位置即可。

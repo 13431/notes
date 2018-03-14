@@ -1,0 +1,1318 @@
+#+TITLE: Spring Data tutor
+
+
+* Spring AOP
+** Proxy
+[例] 一个女孩要表白
+
+先定义这个女孩的接口跟类
+#+BEGIN_SRC java
+  // 接口，包含一个表白(sayLove)的方法
+  public interface Person {
+      void sayLove();
+  }
+
+
+  // 具体类，一个要去表白的女孩儿
+  public class Girl implements Person {
+      @Override
+      public void sayLove() {
+          System.out.println("我爱你.");
+      }
+  }
+
+#+END_SRC
+
+如果不通过代理的方式，那么表白的代码如下：
+#+BEGIN_SRC java
+  main () {
+      Girl z = new Girl();
+      z.sayLove();
+  }
+#+END_SRC
+
+但是在某些情况下，直接表白是不合适的，所以需要有人出面玉成此事。
+这个时候，需要代理。代理出面，代替女孩儿求爱。
+
+分为静态代理和动态代理。
+
+*** 静态代理
+
+实现方式有两种：继承、聚合
+
+首先，继承的方式：
+#+BEGIN_SRC java
+  // 这就是要帮忙出面的代理，它需要有 sayLove() 方法
+  public class LoveProxy extends Girl {
+      @Override
+      public void sayLove() {
+          super.sayLove();
+          System.out.println("祝你们能白头偕老.");
+      }
+  }
+
+
+  // 执行
+  main() {
+      LoveProxy m = new LoveProxy();
+      // 让代理帮助表白
+      m.sayLove();
+  }
+#+END_SRC
+
+
+其次，聚合的方式。很重要的方式。这种方式必须要有接口。
+#+BEGIN_SRC java
+  // 需要实现 Girl 相同的接口，我们的代理必须要有 sayLove() 方法
+  public class LoveProxy implements Person {
+      Girl z = null;
+      public LoveProxy(Girl g) {
+          this.z = g;
+      }
+
+      @Override
+      public void sayLove() {
+          z.sayLove();
+          System.out.println("我们在一起吧。");
+      }
+  }
+
+
+  main() {
+      LoveProxy m = new LoveProxy(new Girl());
+      m.sayLove();
+  }
+#+END_SRC
+
+*** JDK 动态代理
+JDK 的动态代理，必须依赖接口实现
+
+首先，要创建一个代理的 *生成器* ，用来为某个类生成代理。
+#+BEGIN_SRC java
+  public class JDKLoveProxyGenerator implements InvocationHandler {
+
+      Object z = null;
+
+      public JDKLoveProxyGenerator(Object g) {
+          this.z = g;
+      }
+
+      @Override
+      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+          // 用反射的方式，调用 z 里的原方法
+          Object result = method.invoke(z, args);
+          System.out.println("你们真的能够在一起。");
+          return result;
+      }
+  }
+#+END_SRC
+
+
+利用上边的代理生成器，生成一个帮助我们做事的代理。
+#+BEGIN_SRC java
+  main() {
+
+      // 通过代理生成器，为 Girl 创建一个代理
+      // 注意，生成的代理类是 Person 接口的一个实现
+      Person loveProxy = (Person) Proxy
+          .newProxyInstance(Girl.class.getClassLoader(),
+                            Girl.class.getInterfaces(),
+                            new JDKLoveProxyGenerator(new Girl()));
+      // 让代理帮助做某些事
+      loveProxy.sayLove();
+
+
+      System.out.println("--------------------");
+
+
+      // 一个动态代理生成器，可以为多个不同的接口生成代理
+      // 下面为 Dog 生成一个代理
+      Animal animalLoveProxy = (Animal) Proxy
+          .newProxyInstance(Dog.class.getClassLoader(),
+                            Dog.class.getInterfaces(),
+                            new JDKLoveProxy(new Dog()));
+      animalLoveProxy.sayLove();
+  }
+#+END_SRC
+
+
+*** CGLib 动态代理
+CGLib 动态代理使用的是直接修改 Class 字节码的方式实现，它并不需要接口。
+
+如果使用 CGLib 的动态代理，首先，要在工程中加入 cglib 的 jar 包支持：
+: compile "cglib:cglib:3.2.4"
+
+其次，使用 CGLib 实现我们的 *代理生成器* ，只要实现 MethodInterceptor 接口即可：
+#+BEGIN_SRC java
+  public class CGLibLoveProxyGenerator implements MethodInterceptor {
+      @Override
+      public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+
+          Object result = null;
+
+          System.out.println("这个位置是 @Before 通知");
+
+          try {
+              // 调用原方法
+              result = proxy.invokeSuper(obj, args);
+              System.out.println("这个位置是 @AfterReturning 通知，这里可以引用到原函数的返回值");
+              return result;
+          }
+          catch (Throwable e) {
+              System.out.println("这个位置是 @AtferThrowing 通知，这里可以引用到异常变量");
+          } finally {
+              System.out.println("我是一个 @After 通知");
+          }
+      }
+  }
+#+END_SRC
+
+然后，就可以用上面的 CGLibLoveProxyGenerator 为某个类生成代理了：
+#+BEGIN_SRC java
+  main() {
+
+      /**
+       * 这是一个使用 JDK 动态代理的例子。
+       */
+      Person loveProxy = (Person) Proxy
+          .newProxyInstance(Girl.class.getClassLoader(),             // classLoader
+                            Girl.class.getInterfaces(),              // 接口
+                            new JDKLoveProxyGenerator(new Girl())    // 代理生成器
+                            );                    // 注意，生成的代理的类型是 Person
+
+      loveProxy.sayLove();
+
+
+        
+      /**
+       * 这是一个使用 CGLib 动态代理的例子。
+       * 跟上面用 JDK 代理方式比较，发现它们其实是一致的。
+       */
+      Enhancer enhancer = new Enhancer();
+      enhancer.setClassLoader(Dog.class.getClassLoader()); // classLoader
+      enhancer.setSuperclass(Dog.class);                   // 父类
+      enhancer.setCallback(new CGLibLoveProxyGenerator()); // 代理生成器
+
+      Dog dogProxy = (Dog) enhancer.create();    // 注意，生成的代理的类型是 Dog
+
+      // 其实，上面创建 dogProxy 的代码可以简写为:
+      // Dog dogProxy = (Dog) Enhancer.create(Dog.class, null, new CGLibLoveProxyGenerator());
+
+      dogProxy.sayLove();
+  }
+
+#+END_SRC
+
+** AOP
+AspectJ 是一个支持面向切面编程的包。除了 AspectJ，还有 Jboss AOP 和 Spring AOP。
+
+Spring AOP 的实现不够好，所以在 spring 中一般开启 AspectJ 的支持。
+
+Spring AOP 采用动态织入，AspectJ 采用静态织入。
+
+
+*几个相关概念：*
+1. Advice: 要向目标位置加入什么
+2. Pointcut: 要加到哪些位置
+3. Aspect: 一系列 Advice + Pointcut 的集合。
+4. Joinpoint: Pointcut 中的具体某个位置
+
+
+*在 Spring 中使用 AspectJ:*
+
+第一步，加入jar包：
+: compile "org.aspectj:aspectjweaver:1.8.9
+
+第二步，在 spring.xml 中，增加 aspectj 的支持。
+: <aop:aspectj-autoproxy proxy-target-class="true" />
+
+第三步，创建切面，放入容器。
+#+BEGIN_SRC java
+  // 先定义一个日志相关的切面
+  @Component
+  @Aspect
+  @Order(2)  // 如果定义了多个切面，由 order 来决定先后执行顺序，越小越靠前
+  public class LogAspect {
+
+      // 定义 Pointcut，方便复用
+      @Pointcut("execution(* edu.nf.emptyproject.service.UserService(..))")
+      private void log1() {}
+
+      // 定义前置通知
+      @Before("execution(* edu.nf.emptyproject.service.UserService.*(..))")
+      public void sayHello() {
+          System.out.println("【AOP】 hello...");
+      }
+
+      // 定义后置通知
+      @After("execution(* edu.nf.emptyproject.service.UserService.find*(..))")
+      public void sayBye() {
+          System.out.println("【AOP】 Goodbye...");
+      }
+  }
+
+
+  // 定义一个计算运行时间的切面
+  @Component
+  @Aspect
+  @Order(1)
+  public class BenchmarkAspect {
+
+      @Around("execution(* edu.nf.emptyproject.service.UserService.*(..)))")
+      public Object doSomePrivsCheck(ProceedingJoinPoint joinPoint) throws Throwable {
+          long start = System.currentTimeMillis();
+          Object ret = joinPoint.proceed();
+          System.out.printf("【AOP】 执行方法 %s 一共用了 %d ms\n", joinPoint.getSignature().getName(), System.currentTimeMillis() - start);
+          return ret;
+      }
+
+  }
+#+END_SRC
+
+
+最后，来一发例子：
+#+BEGIN_SRC java
+  main () {
+      ApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+      UserService userService = context.getBean(UserService.class);
+      userService.sayHello();
+  }
+#+END_SRC
+
+
+上面是用注解的形式实现的切面。当然可以用 xml 的方式同样做到：
+#+BEGIN_SRC xml
+  <bean id="logAspect" class="edu.xxx.LogAspect" />
+
+  <aop:config>
+    <aop:aspect ref="logAspect">
+      <aop:pointcut id="a" expression="execution(* edu..*.*(..))" />
+      <aop:before method="sayHello" pointcut-ref="a" />
+    </aop:aspect>
+  </aop:config>
+#+END_SRC
+
+Ok.
+
+
+*注：AspectJ 表达式函数:*\\
+| 函数          | 说明                                                          |
+| excution()    | excution(* com.*.*(..)), 表示匹配 com 包下所有方法            |
+| args()        | arg(int, int), 表示匹配所有参数为int, int的方法               |
+| within()      | within(sss.*), 匹配sss包下所有的类下的所有方法                |
+| target()      | target(sss.Test), 匹配所有的类及其子类                        |
+| this()        | this(sss.Test), 当前 AOP 对象实现了Test接口的所有方法         |
+| @annotation() | @annotation(com.Test), 表示匹配所有标注了@Test的方法          |
+| @args()       | @arg(Test), 匹配参数注解为Test的方法                          |
+| @within()     | @within(sss.Test), 匹配所有使用Test注解的类的所有方法         |
+| @target       | @target(sss.Test), 所有当前目标对象使用Test注解的类的所有方法 |
+
+
+** 声明式事务
+
+事务配置分为三个部分： DataSource + TransactionManager + Proxy。
+
+首先，在 spring.xml 中配置事务管理器(TransactionManager)：
+
+#+BEGIN_SRC xml
+  <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+#+END_SRC
+
+
+然后，通过 xml 或 annotation 的方式配置事务：
+
+*** 在 xml 中，用 aop 的方式配置:
+#+BEGIN_SRC xml
+  <!-- 使用事务管理器，生成事务的 advisor -->
+  <tx:advice id="txAdvice" transaction-manager="transactionManager">
+    <tx:attributes>
+      <!-- 可以配置事务的属性 -->
+      <tx:method name="get*" read-only="true" />
+      <tx:method name="list*" read-only="true" />
+    </tx:attributes>
+  </tx:advice>
+
+  <!-- 为指定类的指定方法，织入事务代码 -->
+  <aop:config>
+    <aop:pointcut id="services" expression="execution(* fish.miniblog.service.*.*(..))" />
+    <aop:advisor pointcut-ref="services" advice-ref="txAdvice" />
+  </aop:config>
+#+END_SRC
+
+
+*** 使用 @Transactional 注解的方法:
+
+首先，在 spring.xml 中启用事务注解:
+#+BEGIN_SRC xml
+  <tx:annotation-driven transaction-manager="transactionManager" />
+#+END_SRC
+
+然后，就可以肆无忌惮使用 @Transactional 注解了。
+
+* Spring MVC
+** 创建 MVC 项目基本步骤
+
+第一步，创建 Gradle 项目，在 build.gradle 增加相关依赖
+#+BEGIN_SRC java
+  apply plugin: 'java'
+  apply plugin: 'war'
+
+  // 指定 Java 版本
+  sourceCompatibility = 1.8
+
+  // 配置下载 jar 包的地址
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+
+  // 配置需要的 jar 包依赖
+  dependencies {
+
+    // 定义两个局部变量
+    // 这里代表我们需要的 hibernate 和 spring 的版本
+    def hibernateVersion = "5.1.0.Final"
+    def springVersion = "4.3.5.RELEASE"
+
+    // 在 test 中需要用到的 jar 包
+    testCompile (
+      "junit:junit:4.12"
+    )
+
+    // 指明 Tomcat 上已经自带的 jar 包，这样发布的时候才不会重复
+    providedCompile (
+      "javax:javaee-web-api:7.0",
+    )
+
+    // 配置我们项目需要用到的所有 jar 包，即 compile 环节需要的 jar 包
+    compile (
+
+      // 本地的 OJDBC 包加入进来，要改成自己的路径
+      files("E:/SSH/lib_hibernate/ojdbc7.jar"),
+
+      // 用来管理数据源的知名 jar 包
+      "c3p0:c3p0:0.9.1.2",
+
+      // jsp 中 jstl 标签的支持 jar 包
+      "javax.servlet:jstl:1.2",
+
+      // log4j 日志支持的 jar 包
+      "log4j:log4j:1.2.17",
+
+      // 配置 hibernate
+      "org.hibernate:hibernate-core:$hibernateVersion",
+      "org.hibernate:hibernate-validator:5.4.0.Final",
+
+      // 配置 spring
+      "org.springframework:spring-web:$springVersion",
+      "org.springframework:spring-orm:$springVersion",
+      "org.springframework:spring-aop:$springVersion",
+      "org.springframework:spring-webmvc:$springVersion",
+      "com.fasterxml.jackson.core:jackson-databind:2.5.1",
+    )
+  }
+
+
+  // 为编译器配置编码，防止某些情况下编译出现乱码的情况
+  // 相应的，我们所有的代码应该保存成 UTF-8 格式
+  tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+  }
+
+
+  // 自定义任务，将工程所需要的 jar 包拷贝到项目下的 lib 文件夹下
+  // 需要手动执行这个 task 才会有效果。这是为了方便导出 jar 包
+  task copyJars(type: Copy) {
+    // 指明我们导出的是 compile 和 test 所依赖的 jar 包
+    from configurations.compile, configurations.testCompile
+    // 指明导出到 "lib" 文件夹下
+    into "lib"
+  }
+#+END_SRC
+
+第二步，配置 web.xml，加入 spring 和 mvc 支持
+#+BEGIN_SRC xml
+
+  <!-- 如果使用 RESTful 风格的编程，需要加上这个过滤器 -->
+  <!-- 它能使得 FORM 提交支持 PUT/DELETE 等方法 -->
+  <filter>
+    <filter-name>forRESTful</filter-name>
+    <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>forRESTful</filter-name>
+    <servlet-name>springmvc</servlet-name>
+  </filter-mapping>
+
+
+  <!-- 配置 SpringMVC 的 DispatcherServlet  context (child) -->
+  <!-- 它会为 SpringMVC 创建一个独立的容器 -->
+  <!-- 如果使用 SpringMVC，这里必须要配置 -->
+  <!-- 它的父容器是下面配置的 root Context -->
+  <!-- 可以在 init-param 中指定配置文件路径，如果不配置，默认是 "WEB-INF/miniblog-servlet.xml" -->
+  <servlet>
+    <servlet-name>springmvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring-miniblog.xml</param-value>
+    </init-param>
+    <load-on-start>1</load-on-start>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>springmvc</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+
+  <!-- 配置 spring 的 root application context (parent) -->
+  <!-- 创建一个根容器 -->
+  <!-- 如果只是使用 SpringMVC 但不使用 Spring 其他功能，这里可以不配置 -->
+  <!-- 在这个容器里，配置一些全局的东西 -->
+  <!-- 比如 dao/service 的依赖，数据源，sessionFactory，声明式事务之类 -->
+  <!-- 可以通过 context-param 指定配置文件路径，如果不指定，默认是 "WEB-INF/applicationContext.xml" -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:spring-root.xml</param-value>
+  </context-param>
+
+#+END_SRC
+
+第三步，配置 SpringMVC 的 context 文件(spring-miniblog.xml):
+#+BEGIN_SRC xml
+
+  <!-- 注意，要引入正确的命名空间！！！ -->
+
+  <!-- mvc 版本的 context:annotation-driven -->
+  <!-- 针对 mvc 增加了一些其他支持，需要开启 -->
+  <mvc:annotation-driven />
+
+  <!-- 配置扫描发现所有具有 @Controller 注解的类，加载到容器 -->
+  <!-- 注意，在 SpringMVC 的配置文件中，不要扫描 @Controller 之外的类 -->
+  <context:component-scan base-package="app.controller" />
+
+  <!-- 配置静态资源的访问映射 -->
+  <!-- 比如访问 http://localhost/js/jquery.js，mvc 将会去寻找 /assets/javascript/jquery.js -->
+  <mvc:resources mapping="/js/**"  location="/assets/javascript/" />
+  <mvc:resources mapping="/css/**" location="/assets/stylesheet/" />
+
+
+  <!-- 配置视图解析器，将 Controller 返回的字符串组织成全路径 -->
+  <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/WEB-INF/view/" />
+    <property name="suffix" value=".jsp" />
+  </bean>
+
+  <!-- 配置资源文件，如下配置，资源文件则为 resource 文件夹下的 message*.properties 或 message*.xml -->
+  <!-- 注意，要把资源文件保存成 UTF-8 格式，否则，需要在这里通过 defaultEncoding 指定编码 -->
+  <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+    <property name="basename" value="message" />
+    <property name="defaultEncoding" value="GBK" />
+  </bean>
+
+  <!-- 根据需要，还可以在这个配置文件里配置拦截器、转换服务等 -->
+
+#+END_SRC
+
+第四步，如果需要建立根容器，配置根容器的 context 文件(spring-root.xml):
+#+BEGIN_SRC xml
+  <!-- 启用注解，让 spring 在加载的时候自动扫描指定包 -->
+  <!-- 这样会将含有 @Service/@Repository/@Component 等注解的类在容器中实例化 -->
+  <context:component-scan base-package="fish.miniblog.service, fish.miniblog.dao" />
+
+
+  <!-- 使用外部的 properties 文件 -->
+  <!-- 我们一般会将经常要改动的一些参数提取出来放到外部 -->
+  <context:property-placeholder location="classpath:db.properties" />
+
+
+  <!-- 配置 Hibernate 的 Sessionfactory -->
+  <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+    <property name="dataSource">
+      <bean class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="user" value="${user}" />
+        <property name="password" value="${password}" />
+        <property name="jdbcUrl" value="${url}" />
+        <property name="driverClass" value="${driver}" />
+      </bean>
+    </property>
+    <property name="hibernateProperties">
+      <props>
+        <prop key="hibernate.show_sql">true</prop>
+        <prop key="hibernate.format_sql">true</prop>
+        <prop key="hibernate.hbm2ddl.auto">update</prop>
+        <prop key="hibernate.dialect">${dialect}</prop>
+      </props>
+    </property>
+    <property name="packagesToScan" value="fish.miniblog.model" />
+  </bean>
+
+
+  <!-- 配置事务管理器 -->
+  <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+
+
+  <!-- 开启事务相关的注解 -->
+  <!-- 然后，就可以在 Service 相关的类或方法上通过 @Transactional 开启事务支持了 -->
+  <tx:annotation-driven proxy-target-class="true"/>
+
+#+END_SRC
+
+第五步，建立 Controller，进行测试
+#+BEGIN_SRC java
+  @Controller
+  @RequestMapping("/users")
+  class UserController {
+
+      @RequestMapping("/{name}")
+      public String show(@PathVariable String name, Model model) {
+          model.add("name", name);
+          return "show";    // 返回的是 "/WEB-INF/view/show.jsp" 页面
+      }
+  }
+#+END_SRC
+
+** Parameters
+*** 基本类型的自动绑定
+会根据 handler 参数列表中的字段名字，自动绑定数据
+
+如果参数没有被赋值，默认会尝试将 null 赋予它。所以对于一些 int 之类的类型，会抛出 IllegalStateException 异常。
+
+*** 集合类型的自动绑定
+*** 对象的自动封装
+#+BEGIN_SRC html
+  <!-- form -->
+  <form action="/greeting">
+    <input type="text" name="name" placeholder="请输入名字" />
+    <input type="text" name="age" placeholder="请输入年龄" />
+    <input type="submit">
+  </form>
+#+END_SRC
+
+#+BEGIN_SRC java
+  // handler
+  @RequestMapping("/greeting")
+  public String greeting(User user) {
+      return "greeting";
+  }
+
+  // model
+  Class User {
+      private String name;
+      private int age;
+  }
+#+END_SRC
+
+*** HttpSession/HttpServletRequest 等的自动绑定
+: public String greeting(HttpServletRequest r, HttpSession s)
+
+*** @RequestParam
+定制入参的名字和默认值等
+: public String greeting(@RequestParam(name = "username", defaultValue = "xyz") String name)
+
+*** @RequestAttribute
+将 request 的某个 Attribute 值，赋予 handler 参数
+: public String greeting(@RequestAttribute(name = "name") String name)
+
+*** @CookieValue
+用来绑定 cookie 中的值
+
+*** @RequestHeader
+绑定 http 请求头部的信息到参数中
+: public String greeting(@RequestHeader(name = "user-agent") String ua)
+
+*** @PathVariable
+绑定 url 中匹配的串到参数中，用 {} 匹配
+: @RequestMapping("/greeting/{id}")
+: public String greeting(@PathVariable int id)
+
+*** @RequestBody
+将 http 请求 body 里的数据自动转换并绑定到参数。
+
+*** @ResponseBody
+忽略头部，直接将内容作为响应体返回。
+
+示例：
+
+#+BEGIN_SRC js
+  $("#showmsg").click(function () {
+      d = {"name": "xiaohui", "age": 9};
+      $.ajax({
+          method: 'post',
+          url: '/greeting',
+          data: JSON.stringify(d),
+          contentType: 'application/json',
+          success: function (o) {
+              console.log(o);  // 得到的是 json 对象
+              alert(eee.age);
+              alert(eee.name);
+          }
+      });
+  });
+#+END_SRC
+
+UserController:
+#+BEGIN_SRC java
+  @RequestMapping("/greeting")
+  @ResponseBody
+  public User greeting(@RequestBody User user) {
+      System.out.println("又过了一个新年！");
+      int age = user.getAge();
+      user.setAge(age + 1);
+      return user;
+  }
+#+END_SRC
+
+*** @SessionAttribute
+*** @ModelAttribute
+*** Errors/BindingResult
+用来绑定出错的信息
+
+*** Model/View/ModelAndView
+
+** 请求流程
+当请求被 DispatcherServlet 拦截，会在 doService 里面完成所有的处理逻辑。
+
+处理的大致流程是这样的：
+1. 预处理
+2. 根据请求的 URL 通过 HandlerMapping 获取匹配的 Controller 和 handler
+3. 创建 ModelAndView 对象，这个对象将会保存所有的模型数据，还会持有页面展现相关的信息
+   : ModelAndView mv = null
+4. 调用相应的 handler 方法，将结果封装成 ModelAndView 赋值给 mv。
+5. 调用 render 方法，将 Model 里的数据渲染到 View 视图里
+6. 清理工作
+
+所以我们需要明白，我们的 handler 最终产生的应该是一个保存了数据和视图的 ModelAndView。
+即使我们的 handler 返回类型是字符串或其他，到最后还是被封装成了 ModelAndView。
+
+而且在封装 ModelAndView 时，会将 handler 参数列表上的数据自动添加到里面。
+
+我们可以在 jsp 里，对 ModelAndView 里的所有数据通过 el 表达式或 spring 标签进行获取。
+
+** Validation(表单验证)
+三种方法：
+*** 最基本的校验
+几个重要的概念
+- 一个接口 Errors/BindingResult，用来保存绑定错误信息。
+- 两个方法 errors.reject() / errors.rejectValue()，用来注册全局/字段级别的错误信息
+- 一个标签 <form:errors path="*" />
+
+例子，首先，在页面上：
+#+BEGIN_SRC html
+  <form:form action="/users/create" modelAttribute="user">
+    <ul class="errorTip">
+      <form:errors path="*" cssClass="error" element="li" />
+    </ul>
+    <div>
+      <form:input path="name" />
+      <form:errors path="name" cssClass="error" element="div" />
+    </div>
+    <div>
+      <form:input type="number" path="age" />
+      <form:errors path="age" cssClass="error" element="p" />
+    </div>
+    <input type="submit" value="注册" />
+  </form:form>
+#+END_SRC
+
+然后，可以在 Controller 中的 handler 里进行校验，添加错误信息
+#+BEGIN_SRC java
+  @Controller
+  @RequestMapping("/users")
+  class UserController {
+
+      @RequestMapping("/create")
+      public String create(User user, Errors errors) {
+
+          // 校验名字
+          if(user.getName() == null || empty(user.getName())) {
+              errors.rejectValue("name", null, "名字不能为空");
+          }
+
+          // 校验年龄
+          if(user.getAge() < 18) {
+              errors.rejectValue("age", null, "年龄太小了，18R");
+          }
+
+          // 全局检验的例子
+          if(user.getName().equals("admin")) {
+              errors.reject(null, "你是谁？");
+          }
+
+
+          // 如果有校验错误，返回相应错误页面
+          if(errors.hasErrors())
+              return "regist";
+
+          // 如果没有错误，返回的页面
+          return "greeting";
+      }
+  }
+#+END_SRC
+
+这样，就可以了。这种方法是基于 handler 的，优点是定义方便，缺点是不便于复用。
+
+*** 自定义验证器
+
+首先，自定义我们的验证器，只需要实现 Validator 接口即可。
+#+BEGIN_SRC java
+  public class UserValidator implements Validator {
+
+      // 要来校验验证的类
+      @Override
+      public boolean supports(Class<?> clazz) {
+          return clazz.equals(User.class);
+      }
+
+      // 写我们的校验逻辑，把相关错误注册到 errors 里面
+      @Override
+      public void validate(Object target, Errors errors) {
+          User user = (User) target;
+          if(user.getName() == null || user.getName().length() < 3) {
+              errors.rejectValue("name", null, "名字不能为空，而且必须要大于 3 位");
+          }
+
+          if(user.getAge() < 18 ) {
+              errors.rejectValue("age", null, "年龄必须要大于 18 岁哦");
+          }
+      }
+  }
+#+END_SRC
+
+其次，需要注册我们的验证器。
+
+可以注册到当前的 Controller 里面，
+#+BEGIN_SRC java
+  // 放到 Controller 里面，这样会在 handler 执行之前被执行
+  @InitBinder
+  protected void init (DataBinder binder) {
+      binder.setValidator(new UserValidator());
+  }
+#+END_SRC
+
+也可以在 spring-mvc.xml 配置里注册成全局的验证器。
+#+BEGIN_SRC xml
+  <mvc:annotation-driven validator="userValidator" />
+  <bean name="userValidator" class="fish.miniblog.validator.UserValidator" />
+#+END_SRC
+
+最后，就可以在所需要验证的参数前面加上 @Validated 注解，来实现参数的自动校验了。
+
+*** JSR-303 风格校验
+JSR-303 是 java 官方推出的一套 Validation 接口。
+
+hibernate 给出了一个完整实现。
+
+首先，如果想使用 JSR-303 的校验风格，需要引入相应的包：
+: complie "org.hibernate:hibernate-validator:5.4.0.Final"
+
+其次，添加我们的验证逻辑。需要在我们的 model bean 上添加相关注解：
+#+BEGIN_SRC java
+  public class User {
+      @NotNull
+      @Size(min = 3, max = 10)
+      private String name;
+
+      @Range(min = 10, max = 100)
+      private int age;
+  }
+#+END_SRC
+
+再次，要保证在我们的 spring-mvc.xml 中存在:
+: <mvc:annotation-driven />
+
+最后，使用，只要在 Controller 的相关字段上添加 @Valid 注解即可。
+#+BEGIN_SRC java
+  public String create(@Valid User user, Errors errors) {
+      // 其他的使用跟上面是一致的.
+  }
+#+END_SRC
+
+** PropertyEditor/Convertor/Formater(日期转换为例)
+*** 第一种方法：利用内置的 CustomDateEditor
+首先，在我们的 Controller 的 InitBinder 里面，注册 CustomEditor
+#+BEGIN_SRC java
+  @InitBinder
+  public void init (WebDataBinder binder) {
+      CustomDateEditor dateEditor = new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true);
+      binder.registerCustomEditor(Date.class, dateEditor);                                );
+  }
+#+END_SRC
+
+然后，就可以正常转换了。
+
+*** 第二种方法：实现自定义转换器
+spring 3.0 之后，使用 converter
+
+#+BEGIN_SRC java
+  public class MyDateConverter implements Converter<String, Date> {
+      public Date convert(String datestr) {
+          // 自己去实现，将字符串转换为 Date 对象。
+          // 注意考虑异常处理等
+          return null;
+      }
+  }
+#+END_SRC
+
+然后需要在配置文件中注册转换器
+#+BEGIN_SRC xml
+  <!-- 配置我们定义的转换服务 -->
+  <mvc:annotation-driven conversion-service="myConversionService" />
+
+  <!-- 定义全局的转换服务，可以配置多个转换器 -->
+  <!-- 在这里，只配置了我们自定义的转换器，DateConverter -->
+  <bean name="myConversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+    <property name="converters">
+      <set>
+        <bean class="fish.miniblog.converter.MyDateConverter" />
+      </set>
+    </property>
+  </bean>
+
+#+END_SRC
+
+这样就可以了。所有的 yyyy-MM-yy 之类的字符串就可以正常转换成 Date 对象了。
+
+*** 第三种方法：使用 @DateTimeFormat 注解
+在 model 上，增加相应注解：
+#+BEGIN_SRC java
+  class User {
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date birthday;
+  }
+#+END_SRC
+
+就可以了。
+
+另外，如果想让返回的 JSON 对象中能够准确处理时间类型，需要用到 @JsonFormat 注解
+
+*** 日期在页面上的显示
+暂缺。
+
+** Exception(异常处理)
+
+SpringMVC 中默认的异常处理器是 DefaultHandlerExceptionResolver，
+但它只是简单粗暴地将异常栈在页面上进行显示。
+在实际项目中这种处理是不合适的。
+所以，我们需要自己定制我们自己的异常处理方式。
+
+自定义异常，主要有下面两种方法：
+*** HandlerExceptionResolver
+
+这是 SpringMVC 中所有异常处理器的总接口。
+要实现自己的异常处理，就是要继承这个接口，实现自己的处理器：
+#+BEGIN_SRC java
+  public class MyExceptionResolver implements HandlerExceptionResolver {
+      @Override
+      public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+
+          ModelAndView mv = new ModelAndView();
+
+          if(ex instanceof MyException) {
+              mv.addObject("err", ex);
+              mv.setModelName("error");
+          } else {
+              // ... 其他各种情况
+          }
+
+          return mv;
+      }
+  }
+#+END_SRC
+
+然后，在 springmvc.xml 中注册为 bean 即可。
+#+BEGIN_SRC xml
+  <bean class="fish.miniblog.MyExceptionResolver" />
+#+END_SRC
+
+
+当然，如果每次异常处理都需要自己定义 ExceptionResovler，很麻烦。
+所以，spring 给我们提供了一个简单的默认实现，SimpleMappingExceptionResolver。
+如果需要，只需要在 springmvc.xml 中注册即可：
+#+BEGIN_SRC xml
+  <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    <!-- 如果有异常，最后由 error.jsp 页面来显示错误信息  -->
+    <property name="defaultErrorView"   value="error" />
+    <!-- 在 error.jsp 中，使用 ${err} 来获取异常信息 -->
+    <property name="exceptionAttribute" value="err" />
+
+    <property name="exceptionMappings">
+      <!-- 暂缺 -->
+    </property>
+  </bean>
+#+END_SRC
+
+
+*** @ExceptionHandler 注解
+
+可以定义一个类似于普通 handler 的方法，添加 @ExceptionHandler 将其作为一个异常处理方法
+#+BEGIN_SRC java
+  @Controller
+  @ControllerAdvice
+  public class ExceptionController {
+
+      @ExceptionHandler({YourException.class})
+      public ModelAndView hahaha (Exception e) {
+          ModelAndView mv = new ModelAndView("error");
+          mv.addObject("err", e);
+          return mv;
+      }
+
+      @ExceptionHandler
+      public String hahaha (MyException e) {
+          return "index";
+      }
+  }
+
+#+END_SRC
+
+默认只是 Controller 范围内有效的。
+
+Spring 3 之后增加了一个 @ControllerAdvice 注解，作用在控制器上。
+它会将其中所有的 @ExceptionHandler、@InitBinder、@ModelAttribute 等全局化。
+
+所以，一般情况下，我们可以将所有 @ExceptionHandler 方法统一放置在一个加了 @ControllerAdvice 的控制器里，实现全局异常。
+
+就酱紫，没什么好说的。
+
+** Interceptor(拦截器)
+拦截器主要用来增强 handler 方法
+
+拦截器的接口有两个，定义拦截器就是实现他们之一
+- HandlerInterceptor      参数比较多，能够更全面控制拦截行为
+- WebRequestInterceptor   针对 Web 请求精简了参数列表，主要用来控制 request/ModelAndView/Exception
+
+主要实现以下三个方法:
+- preHandler()       在执行 Controller 相应 handler 之前要执行
+- postHandler()      执行完 handler，进入 render 页面渲染前的阶段执行
+- afterCompletion()  所有的东西都做完，退出前执行。主要用来做一些清理工作
+
+下面是例子:
+
+*定义*
+#+BEGIN_SRC java
+  // 实现 HandlerInterceptor 接口的形式
+  public class MyInterceptor implements HandlerInterceptor {
+      @Override
+      public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+          // 在调用 handler 之前被调用
+          // 如果返回 true，继续下面的流程，如果返回 false，直接跳转到 afterComplete 中止运行。
+          return true;
+      }
+
+      @Override
+      public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+          // 在调用完 handler 得到封装好的 ModelAndView 之后，渲染页面前被调用
+          // 在这里，可以对 ModelAndView 里的数据作出自己的修改等
+      }
+
+      @Override
+      public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+          // 在最后的清理阶段被调用
+          // 在这里，进行善后操作。
+      }
+  }
+
+
+  // 实现 WebRequestInterceptor 接口的形式
+  public class HisInterceptor implements WebRequestInterceptor {
+      @Override
+      public void preHandle(WebRequest request) throws Exception {
+          System.out.println("pre");
+      }
+
+      @Override
+      public void postHandle(WebRequest request, ModelMap model) throws Exception {
+          System.out.println(model);
+      }
+
+      @Override
+      public void afterCompletion(WebRequest request, Exception ex) throws Exception {
+          System.out.println(ex);
+      }
+  }
+
+
+#+END_SRC
+
+*注册*
+#+BEGIN_SRC xml
+  <mvc:interceptors>
+    <!-- 全局拦截器 -->
+    <bean class="fish.miniblog.interceptor.YourInterceptor" />
+    <bean class="fish.miniblog.interceptor.MyInterceptor" />
+
+    <!-- 作用于指定映射的拦截器 -->
+    <mvc:interceptor>
+      <!-- 为所有 /users/** 请求配置拦截器 -->
+      <mvc:mapping path="/users/**"/>
+      <bean class="fish.miniblog.interceptor.HisInterceptor" />
+    </mvc:interceptor>
+
+  </mvc:interceptors>
+#+END_SRC
+
+然后，就这样了。
+
+** MessageSource(国际化，资源文件)
+
+使用资源文件，实现国际化。
+
+如果使用资源文件，只需要自定义我们自己的资源文件处理器，即实现 MessageSource 接口。
+
+但 spring 提供了一些实现好的处理器，我们只需要注册使用，比如，ReloadableResourceBundleMessageSource：
+#+BEGIN_SRC xml
+  <bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+    <!-- 指定我们的资源文件为class根目录下的 message.properties 文件 -->
+    <property name="basename" value="message" />
+  </bean>
+#+END_SRC
+
+在 message[.zh_CN].properties 里面定义 k/v 形式的信息。
+: MY_NAME = GODMAN
+: NAME.ERROR = 名字错误
+
+然后，就可以使用了。比如：
+: <fmt:message key="MY_NAME" />
+再比如，在 JSR-303 验证里：
+: @NotNull(message = "NAME.ERROR")
+在自定义验证器里:
+: errors.rejectValue("name", "NAME.ERROR")
+
+就这样。。。简单。
+
+** MultipartFile(文件的上传)
+SpringMVC 中，文件的上传，是通过 MultipartResolver 实现的。
+所以，如果要实现文件的上传，只要在 spring-mvc.xml 中注册相应的 MultipartResolver 即可。
+
+MultipartResolver 的实现类有两个：
+1. CommonsMultipartResolver
+2. StandardServletMultipartResolver
+
+两个的区别：
+1. 第一个需要使用 Apache 的 commons-fileupload 等 jar 包支持，但它能在比较旧的 servlet 版本中使用。
+2. 第二个不需要第三方 jar 包支持，它使用 servlet 内置的上传功能，但是只能在 Servlet 3 以上的版本使用。
+
+*以第二个为例，使用步骤：*
+
+首先，在 web.xml 中为 DispatcherServlet 配置 Multipart：
+#+BEGIN_SRC xml
+  <servlet>
+    <servlet-name>mvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring-mvc.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+
+    <multipart-config>
+      <!-- 上传文件的大小限制，比如下面表示 5 M -->
+      <max-file-size>5242880</max-file-size>
+      <!-- 一次表单提交中文件的大小限制，必须下面代表 10 M -->
+      <max-request-size>10485760</max-request-size>
+      <!-- 多大的文件会被自动保存到硬盘上。0 代表所有 -->
+      <file-size-threshold>0</file-size-threshold>
+    </multipart-config>
+    
+  </servlet>
+#+END_SRC
+
+
+其次，在 spring-mvc.xml 中注册 MultipartResolver:
+#+BEGIN_SRC xml
+  <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver" />
+#+END_SRC
+
+
+然后，就可以使用了，比如，表单：
+#+BEGIN_SRC html
+  <form:form action="/file/upload" enctype="multipart/form-data">
+    <input type="file" name="mfile" />
+    <input type="submit" value="上传图片" />
+  </form:form>
+#+END_SRC
+
+
+于是，就可以在 Controller 里这样处理了：
+#+BEGIN_SRC java
+  @PostMapping("/upload")
+  public String upload(MultipartFile mfile) throws Exception {
+      String savePath = ...;
+      if(!mfile.isEmpty()) {
+          mfile.transferTo(new File(savePath + mfile.getOriginalFilename()));
+      }
+      return "file/index";
+  }
+#+END_SRC
+
+
+
+** 集成 javaMail 发送邮件
+
+来一个在 SpringMVC 中通过 163 发送邮件的示例
+
+首先，增加 jar 包
+: compile "org.springframework:spring-context-support:$springVersion"
+: compile "javax.mail:mail:1.4.7"
+
+其次，在 spring.xml 中增加 mailSender 的配置：
+#+BEGIN_SRC xml
+  <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="host" value="smtp.163.com" />
+    <property name="username" value="name" />
+    <property name="password" value="pass" />
+    <property name="javaMailProperties">
+      <props>
+        <prop key="mail.transport.protocol">smtp</prop>
+        <prop key="mail.smtp.auth">true</prop>
+        <prop key="mail.smtp.starttls.enable">true</prop>
+        <prop key="mail.debug">true</prop>
+      </props>
+    </property>
+  </bean>
+#+END_SRC
+
+
+最后，在代码中使用:
+#+BEGIN_SRC java
+  @Service
+  public class UserService {
+      
+      @Resource private MailSender mailSender;
+
+      public void sendMailDemo() {
+          SimpleMailMessage mailMsg = new SimpleMailMessage();
+          mailMsg.setFrom("xxx@163.com");   // 发件人
+          mailMsg.setTo("12345@qq.com");    // 收件人
+          mailMsg.setSubject("test");       // 邮件标题
+          mailMsg.setText("测试邮件");       // 发送内容
+
+          mailSender.send(mailMsg);         // 发送
+      }
+  }
+#+END_SRC
+
+* Spring Data JPA
+** step by step
+使用 spring data jpa，只需要下面几步:
+
+*** 引入 Spring data 的 jar 包
+在 build.gradle 里面，增加 jpa 的 starter
+: compile('org.springframework.boot:spring-boot-starter-data-jpa')
+
+*** 实现我们自己的接口
+#+BEGIN_SRC java
+  public interface MyRepository extends JpaRepository<Book, Long> {
+      
+  }
+#+END_SRC
+
+*** 实现我们的自定义方法
+#+BEGIN_SRC java
+    public interface MyRepository extends JpaRepository<Book, Long> {
+
+        /* 第 1 种方式，人工智能 */
+        
+        public List<Book> findBookByPrice(Float price);
+        @Nullable List<Person> findByEmailAddressAndLastname(EmailAddress emailAddress, String lastname);
+        List<Person> findByLastnameAndFirstnameAllIgnoreCase(String lastname, String firstname);
+        List<Person> findByLastnameOrderByFirstnameAsc(String lastname);
+        List<Person> findByLastnameOrderByFirstnameDesc(String lastname);
+
+
+        /* 第 2 种方式，NameQuery - 手动设置查询语句 */
+        
+        @Query("select * from Book where name = ?1")
+        public List<Book> findBookByName(String name);
+        
+        @Query("select u from User u where u.emailAddress = :email")
+        User findByEmailAddress(@Param("email") String emailAddress);
+
+        @Query(value = "SELECT * FROM USERS WHERE EMAIL_ADDRESS = ?1", nativeQuery = true)
+        User findByEmailAddress(String emailAddress);
+
+        @Query(value = "SELECT * FROM USERS WHERE LASTNAME = ?1",
+               countQuery = "SELECT count(*) FROM USERS WHERE LASTNAME = ?1",
+               nativeQuery = true)
+        Page<User> findByLastname(String lastname, Pageable pageable);
+
+
+        /* 第 3 种，修改数据 */
+        @Modifying @Query("update User u set u.firstname = ?1 where u.lastname = ?2")
+        int setFixedFirstnameFor(String firstname, String lastname);
+
+        @Modifying @Query("delete from User u where user.role.id = ?1")
+        void deleteInBulkByRoleId(long roleId);
+        
+
+        /* 另外，可以设置分页、排序参数*/
+
+        List<User> findByLastname(String lastname, Sort sort);
+        List<User> findByLastname(String lastname, Pageable pageable);
+        repo.findByLastname("stark", new Sort("LENGTH(firstname)"));   
+    }
+#+END_SRC
+
+*** 调用
+#+BEGIN_SRC java
+  @Controller
+  public class BookController {
+      @Autowired
+      private MyRepository myRepository;
+      
+      @RequestMapping("/index")
+      public String index() {
+          List<Book> books = myRepository.findBookByName("战争与和平");
+          return ...;
+      }
+  }
+#+END_SRC
+** More
+*Interfaces:*
+- Repository
+- CrudRepository
+- JpaRepository
+
+*Methods:*
+- NamedQuery
+- Method Created
+
+*PageAndSort:*
+- Pagable
+- Sort
+
+** 人工智能关键词示例
+| 关键词            | 示例                                 | JPQL 语句                                                       |
+|-------------------+--------------------------------------+-----------------------------------------------------------------|
+| And               | findByLastnameAndFirstname           | … where x.lastname = ?1 and x.firstname = ?2                   |
+| Or                | findByLastnameOrFirstname            | … where x.lastname = ?1 or x.firstname = ?2                    |
+| Is,Equals         | findByFirstname[Is/Equals]           | … where x.firstname = ?1                                       |
+| Between           | findByStartDateBetween               | … where x.startDate between ?1 and ?2                          |
+| LessThan          | findByAgeLessThan                    | … where x.age < ?1                                             |
+| LessThanEqual     | findByAgeLessThanEqual               | … where x.age <= ?1                                            |
+| GreaterThan       | findByAgeGreaterThan                 | … where x.age > ?1                                             |
+| GreaterThanEqual  | findByAgeGreaterThanEqual            | … where x.age >= ?1                                            |
+| After             | findByStartDateAfter                 | … where x.startDate > ?1                                       |
+| Before            | findByStartDateBefore                | … where x.startDate < ?1                                       |
+| IsNull            | findByAgeIsNull                      | … where x.age is null                                          |
+| IsNotNull,NotNull | findByAge(Is)NotNull                 | … where x.age not null                                         |
+| Like              | findByFirstnameLike                  | … where x.firstname like ?1                                    |
+| NotLike           | findByFirstnameNotLike               | … where x.firstname not like ?1                                |
+| StartingWith      | findByFirstnameStartingWith          | … where x.firstname like ?1 (parameter bound with appended %)  |
+| EndingWith        | findByFirstnameEndingWith            | … where x.firstname like ?1 (parameter bound with prepended %) |
+| Containing        | findByFirstnameContaining            | … where x.firstname like ?1 (parameter bound wrapped in %)     |
+| OrderBy           | findByAgeOrderByLastnameDesc         | … where x.age = ?1 order by x.lastname desc                    |
+| Not               | findByLastnameNot                    | … where x.lastname <> ?1                                       |
+| In                | findByAgeIn(Collection<Age> ages)    | … where x.age in ?1                                            |
+| NotIn             | findByAgeNotIn(Collection<Age> ages) | … where x.age not in ?1                                        |
+| True              | findByActiveTrue()                   | … where x.active = true                                        |
+| False             | findByActiveFalse()                  | … where x.active = false                                       |
+| IgnoreCase        | findByFirstnameIgnoreCase            | … where UPPER(x.firstame) = UPPER(?1)                          |

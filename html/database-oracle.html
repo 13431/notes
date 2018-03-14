@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Oracle 数据库</title>
-<!-- 2017-10-13 Fri 10:40 -->
+<!-- 2018-01-08 Mon 10:29 -->
 <meta  charset="utf-8">
 <meta  name="generator" content="Org-mode">
 <meta  name="author" content="imfine">
@@ -511,7 +511,7 @@ alter user scott identified by [newpassword];
 <span class="org-keyword">select</span> e.* <span class="org-keyword">from</span> emp e, dept d
   <span class="org-keyword">where</span> e.deptno = d.deptno
         <span class="org-keyword">and</span> d.loc=<span class="org-string">'CHICAGO'</span>
-        <span class="org-keyword">and</span> sal = 
+        <span class="org-keyword">and</span> sal =
             <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">select</span> <span class="org-builtin">max</span><span class="org-rainbow-delimiters-depth-2">(</span>sal<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-keyword">from</span> emp e, dept d
               <span class="org-keyword">where</span> e.deptno = d.deptno
                     <span class="org-keyword">and</span> d.loc=<span class="org-string">'CHICAGO'</span><span class="org-rainbow-delimiters-depth-1">)</span>;
@@ -565,7 +565,7 @@ select deptno from emp where sal &lt; 1000;
 <li>将上面查询出的不符合条件的部门排除掉
 <pre class="example">
 select distinct deptno from emp
- where deptno not in 
+ where deptno not in
   (select deptno from emp where sal &lt; 1000);
 </pre>
 </li>
@@ -772,7 +772,7 @@ select distinct deptno from emp
 
 <li>最后，将图跟语句一起上交。这个过程着重思考下项目从设计到编码是怎么一个过程。
 <pre class="example">
-需求分析 -&gt; *概要设计* -&gt; 详细实现。 
+需求分析 -&gt; *概要设计* -&gt; 详细实现。
 </pre>
 </li>
 </ol>
@@ -801,7 +801,7 @@ select distinct deptno from emp
 </ul>
 
 <p>
-用 Java 完成基本的 <code>CRUD</code>，并掌握使用 PL/SQL 操作 blob/clob 的技巧。
+用 Java 完成基本的 =CRUD=，并掌握使用 PL/SQL 操作 blob/clob 的技巧。
 </p>
 </div>
 </div>
@@ -2198,7 +2198,7 @@ minus
 
 
 <span class="org-comment">-- &#22686;&#21152;&#21478;&#19968;&#20010;&#34920;</span>
-<span class="org-keyword">create</span> <span class="org-keyword">table</span> <span class="org-function-name">gp</span> <span class="org-rainbow-delimiters-depth-1">(</span>id <span class="org-type">int</span> <span class="org-keyword">primary</span> <span class="org-keyword">key</span>, <span class="org-keyword">name</span> varchar2<span class="org-rainbow-delimiters-depth-2">(</span>20<span class="org-rainbow-delimiters-depth-2">)</span>, logo varchar2<span class="org-rainbow-delimiters-depth-2">(</span>10<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>; 
+<span class="org-keyword">create</span> <span class="org-keyword">table</span> <span class="org-function-name">gp</span> <span class="org-rainbow-delimiters-depth-1">(</span>id <span class="org-type">int</span> <span class="org-keyword">primary</span> <span class="org-keyword">key</span>, <span class="org-keyword">name</span> varchar2<span class="org-rainbow-delimiters-depth-2">(</span>20<span class="org-rainbow-delimiters-depth-2">)</span>, logo varchar2<span class="org-rainbow-delimiters-depth-2">(</span>10<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>;
 <span class="org-keyword">alter</span> <span class="org-keyword">table</span> <span class="org-function-name">person</span> <span class="org-keyword">add</span>  <span class="org-rainbow-delimiters-depth-1">(</span>gpid <span class="org-type">int</span> <span class="org-keyword">references</span> gp<span class="org-rainbow-delimiters-depth-1">)</span>;
 <span class="org-comment">-- &#20462;&#25913;&#27599;&#20010;&#20154;&#30340; group</span>
 <span class="org-comment">-- update ..</span>
@@ -2272,15 +2272,15 @@ minus
 <h4 id="sec-6-4-2"><span class="section-number-4">6.4.2</span> Charactor</h4>
 <div class="outline-text-4" id="text-6-4-2">
 <ul class="org-ul">
-<li>chr/ascii   ascii码      
+<li>chr/ascii   ascii码
 </li>
 <li>length/lengthb   字符/字节长度
 </li>
-<li>initcap/upper/lower   字母大小写   
+<li>initcap/upper/lower   字母大小写
 </li>
-<li>substr/translate/replace/instr   子串/替换    
+<li>substr/translate/replace/instr   子串/替换
 </li>
-<li>ltrim/rtrim/lpad/rpad   修剪/填充    
+<li>ltrim/rtrim/lpad/rpad   修剪/填充
 </li>
 </ul>
 </div>
@@ -2354,7 +2354,7 @@ minus
              <span class="org-keyword">end</span> "&#24615;&#21035;" <span class="org-keyword">from</span> sss;
 
 <span class="org-comment">-- 3. case when &#30340;&#21478;&#19968;&#31181;&#26041;&#24335;             </span>
-<span class="org-keyword">select</span> <span class="org-keyword">name</span>, <span class="org-keyword">case</span> 
+<span class="org-keyword">select</span> <span class="org-keyword">name</span>, <span class="org-keyword">case</span>
                 <span class="org-keyword">when</span> gender &lt;= 1 <span class="org-keyword">then</span> <span class="org-string">'&#38596;&#24615;'</span>
                 <span class="org-keyword">when</span> gender &gt;= 2 <span class="org-keyword">then</span> <span class="org-string">'&#38604;&#24615;'</span>
                   <span class="org-keyword">else</span> <span class="org-string">'&#26410;&#30693;&#24615;&#21035;'</span>
@@ -2649,7 +2649,7 @@ PS: 如果存在分析函数(row_number etc)，那么，分析函数的执行会
 
 <span class="org-comment">---- &#31532;&#20108;&#31181;&#26041;&#24335;&#65292;&#22312;&#24314;&#34920;&#30340;&#23383;&#27573;&#19978;&#30452;&#25509;&#24314;&#31435;&#32422;&#26463;</span>
 <span class="org-keyword">create</span> <span class="org-keyword">table</span> <span class="org-function-name">ddl_test4</span>
-<span class="org-rainbow-delimiters-depth-1">(</span> 
+<span class="org-rainbow-delimiters-depth-1">(</span>
    id <span class="org-type">int</span> <span class="org-keyword">primary</span> <span class="org-keyword">key</span>,
    <span class="org-keyword">name</span> varchar2<span class="org-rainbow-delimiters-depth-2">(</span>20<span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-keyword">not</span> <span class="org-keyword">null</span>,
    sex <span class="org-keyword">constraint</span> hello250 <span class="org-keyword">references</span> ddl_sex
@@ -3015,7 +3015,7 @@ create table "lowcase_name" (...);
 </ol>
 
 <p>
-在以上分区的基础上，可以两两结合，形成 <b>复合分区</b>，但常用的就是两种：
+在以上分区的基础上，可以两两结合，形成 *复合分区*，但常用的就是两种：
 </p>
 <ol class="org-ol">
 <li>范围-列表分区
@@ -3271,7 +3271,7 @@ subpartition <span class="org-keyword">by</span> hash <span class="org-rainbow-d
 </p>
 
 <p>
-物化视图，可以看做是 <b>加了同步功能的临时表</b>，它占用实际的存储空间。
+物化视图，可以看做是 *加了同步功能的临时表*，它占用实际的存储空间。
 </p>
 
 <p>
@@ -3341,7 +3341,7 @@ disable query rewrite  -- 默认
 <span class="org-keyword">create</span> materialized <span class="org-keyword">view</span> <span class="org-function-name">log</span> <span class="org-keyword">on</span> emp <span class="org-rainbow-delimiters-depth-1">[</span><span class="org-keyword">with</span> rowid/<span class="org-keyword">primary</span> <span class="org-keyword">key</span><span class="org-rainbow-delimiters-depth-1">]</span>;
 <span class="org-comment">-- &#28982;&#21518;&#23601;&#21487;&#20197;&#25351;&#23450;&#22686;&#37327;&#21516;&#27493;&#30340;&#26041;&#24335;&#20102;</span>
 <span class="org-keyword">create</span> materialized <span class="org-keyword">view</span> <span class="org-function-name">mv_emp2</span>
-   build <span class="org-keyword">immediate</span> 
+   build <span class="org-keyword">immediate</span>
    refresh fast                       <span class="org-comment">-- &#37319;&#21462;&#22686;&#37327;&#21516;&#27493;&#30340;&#26041;&#24335;</span>
    <span class="org-keyword">on</span> demand sysdate <span class="org-keyword">next</span> sysdate + 1 <span class="org-comment">-- &#27599;&#22825;&#26356;&#26032;&#19968;&#27425;&#65292;on demand &#21518;&#38754;&#36824;&#26377;&#20854;&#20182;&#24456;&#22810;&#19981;&#21516;&#24418;&#24335;&#30340;&#21629;&#20196;</span>
    enable query rewrite
@@ -3705,7 +3705,7 @@ while ... loop ... end loop;
 <span class="org-comment">-- pl/sql</span>
 <span class="org-keyword">DECLARE</span>
   begin_time <span class="org-type">timestamp</span>;
-<span class="org-keyword">BEGIN</span> 
+<span class="org-keyword">BEGIN</span>
   begin_time := systimestamp;
 
   <span class="org-keyword">FOR</span> i <span class="org-keyword">IN</span> 1..100003 LOOP
@@ -3968,7 +3968,7 @@ while ... loop ... end loop;
 <span class="org-keyword">declare</span>
   s <span class="org-keyword">number</span>;
   c <span class="org-keyword">number</span>;
-<span class="org-keyword">begin</span> 
+<span class="org-keyword">begin</span>
   pxxx<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">'KING'</span>, s, c<span class="org-rainbow-delimiters-depth-1">)</span>;
   dbms_output.put_line<span class="org-rainbow-delimiters-depth-1">(</span>s || <span class="org-string">'----'</span> || c<span class="org-rainbow-delimiters-depth-1">)</span>;
 <span class="org-keyword">end</span>;
@@ -4077,8 +4077,8 @@ imp system/pwd file=D:\aaa.dmp fromuser=(scott) touser=(vip);
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: imfine</p>
-<p class="date">Created: 2017-10-13 Fri 10:40</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="date">Created: 2018-01-08 Mon 10:29</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation">Go ahead, never stop.</p>
 </div>
 </body>
