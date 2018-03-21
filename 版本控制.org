@@ -1,7 +1,6 @@
 #+TITLE: 常用工具
 
-* 版本控制工具之 GIT
-
+* GIT
 Linus:
 #+BEGIN_QUOTE
 I'm an egotistical bastard, and I name all my projects after myself. First Linux, now git.
@@ -11,8 +10,7 @@ I'm an egotistical bastard, and I name all my projects after myself. First Linux
 - https://git-scm.com/book/zh/v2
 
 一图胜千言:
-#+DOWNLOADED: http://vip.com/notes/assets/image/9.tools/git_2017-06-28_03-15-27.png @ 2018-03-21 08:55:36
-[[file:版本控制工具之 GIT/git_2017-06-28_03-15-27_2018-03-21_08-55-36.png]]
+[[file:GIT/git_2017-06-28_03-15-27_2018-03-21_08-55-36.png]]
 
 
 
@@ -131,7 +129,7 @@ git pull
 #+END_SRC
 
 
-* 版本控制工具之 Subversion
+* Subversion
 首先，下载可爱的小乌龟:
 : wget https://nchc.dl.sourceforge.net/project/tortoisesvn/1.9.5/Application/TortoiseSVN-1.9.5.27581-x64-svn-1.9.5.msi
 
