@@ -2,20 +2,25 @@
 
 * 版本控制工具之 GIT
 
+Linus:
+#+BEGIN_QUOTE
+I'm an egotistical bastard, and I name all my projects after myself. First Linux, now git.
+#+END_QUOTE
+
 Git 是一个版本控制工具，它能实现团队中的代码协作开发，在代码同步和管理方面功能强大、理念先进。
 
 Git 是当下最流行的分布式版本控制工具，轻量级，但功能强大，由 linux 之父 linus 开发。它的使用特别广泛，尤其开源社区基本都用它作为版本控制工具。我们每个人也要尽量掌握它。
 
 而网站 github.com 是基于 git 工具的一个代码托管网站，目前基本所有知名的开源项目都选择把代码部署到这个网站。这里的代码包罗万象，是个学习的天堂。实属居家旅行、杀人拿塔的必备网站。
 
-我们自己的 github 主页是 [[https://github.com/s126][github.com/s126]]， 大家可以直接用浏览器访问。另外笔记的项目为 [[https://github.com/s126/notes][github.com/s126/notes]]， 直接查看oracle笔记内容的话是 [[https://github.com/s126/notes/oracle.org][github.com/s126/notes/oracle.org]]。 如果想用 git 工具下载同步代码，方法如下：
+我们自己的 github 主页是 [[https://github.com/13431][github.com/13431]] 大家可以直接用浏览器访问。 如果想用 git 工具下载同步代码，方法如下：
 #+BEGIN_SRC sh
 
 # 1. 进入 git bash，切换到相应目录，比如，e 盘下的 course 目录：
 cd /e/course/
 
 # 2. 如果是第一次下载，执行以下命令
-git clone https://github.com/s126/notes.git
+git clone https://github.com/13431/notes.git
 
 # 3. 如果不是第一次下载，只是更新代码，执行以下命令。
 # ps. 要经常运行这个命令，保持与服务器的同步
@@ -71,16 +76,16 @@ git pull
 
   ## 增加/查看/切换/删除 分支
   git branch                # 查看分支
-  git branch s126           # 创建分支 s126
-  git branch s126 343223    # 以 343223 为起点创建 s126 分支
-  git checkout s126         # 切换到分支 s126
+  git branch 13431          # 创建分支 13431
+  git branch 13431 343223   # 以 343223 为起点创建 13431 分支
+  git checkout 13431        # 切换到分支 13431
   git checkout -b tmp       # 创建并切换到分支 tmp
   git branch -D tmp         # 删除分支 tmp
 
-  ## 合并工作到主分支(s126 -> master)
+  ## 合并工作到主分支(13431 -> master)
   git checkout master       # 切换到主分支
-  git merge HEAD s126       # 将 s126 的最新版本合并到当前分支
-  git pull . s126           # 相当于 git fetch && git merge
+  git merge HEAD 13431      # 将 13431 的最新版本合并到当前分支
+  git pull . 13431          # 相当于 git fetch && git merge
 
   ## 生成并应用补丁，这是另外一个合并工作的方法。暂时不需要搞太清楚。
   git format-patch master > A.patch
@@ -91,8 +96,8 @@ git pull
 
   ## 下载/上传/更新 信息到指定版本库
   git clone git://192.168.1.1/repo.git
-  git push git://192.168.1.1/repo.git s126:master
-  git pull git://192.168.1.1/repo.git master:s126
+  git push git://192.168.1.1/repo.git 13431:master
+  git pull git://192.168.1.1/repo.git master:13431
   git fetch public
 
   ## 其他命令：
@@ -110,10 +115,10 @@ git pull
 
 
   ## 下面的例子是建立一个纯仓库，并作为开发的中心仓库（即 GIT 服务端）
-  git clone --bare /workspace/hnpmi /repo/s126.git   # 创建一个新的纯仓库，用于备份、共享
-  cd /workspace/s126                                 # 这是我们的工作目录
-  git remote add origin /repo/s126.git               # 将刚才新建的仓库添加为h我们的远程分支
-  git push origin master                             # 本地的 master 分支有更新，同步到远程分支
+  git clone --bare /workspace/hnpmi /repo/13431.git   # 创建一个新的纯仓库，用于备份、共享
+  cd /workspace/13431                                 # 这是我们的工作目录
+  git remote add origin /repo/13431.git               # 将刚才新建的仓库添加为我们的远程分支
+  git push origin master                              # 本地的 master 分支有更新，同步到远程分支
 #+END_SRC
 
 
