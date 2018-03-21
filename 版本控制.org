@@ -7,6 +7,15 @@ Linus:
 I'm an egotistical bastard, and I name all my projects after myself. First Linux, now git.
 #+END_QUOTE
 
+官方指南:
+- https://git-scm.com/book/zh/v2
+
+一图胜千言:
+#+DOWNLOADED: http://vip.com/notes/assets/image/9.tools/git_2017-06-28_03-15-27.png @ 2018-03-21 08:55:36
+[[file:版本控制工具之 GIT/git_2017-06-28_03-15-27_2018-03-21_08-55-36.png]]
+
+
+
 Git 是一个版本控制工具，它能实现团队中的代码协作开发，在代码同步和管理方面功能强大、理念先进。
 
 Git 是当下最流行的分布式版本控制工具，轻量级，但功能强大，由 linux 之父 linus 开发。它的使用特别广泛，尤其开源社区基本都用它作为版本控制工具。我们每个人也要尽量掌握它。
