@@ -127,10 +127,17 @@ pre {
     width: auto;
     /*     max-height: 600px; */
     overflow: auto;
-    font-size: 1em;
+    font-size: 0.8em;
     line-height: 1.5;
     background-color: #eff0f1;
     font-family: Consolas, Monaco, DejaVu Sans Mono, Courier new, Simsun;
+}
+div.org-src-container {
+    position: relative;
+}
+pre.src {
+    position: static;
+    overflow: auto;
 }
 
 /* =code= */
@@ -368,7 +375,7 @@ p.verse {
     #table-of-contents::-webkit-scrollbar {
         width: 1px;
     }
-    
+
     #table-of-contents li {
         list-style: none;
     }

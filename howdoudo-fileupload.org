@@ -1,5 +1,5 @@
 #+TITLE: 文件上传
-
+#+SETUPFILE: setup.org
 
 * 前言
 

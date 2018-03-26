@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Spring Data tutor</title>
+<!-- 2018-03-30 Fri 15:20 -->
+<meta  charset="utf-8">
+<meta  name="generator" content="Org-mode">
+<meta  name="author" content="imfine">
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" href="assets/v.css">
+<script src="assets/v.js"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Spring Data tutor</h1>
+<nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Spring AOP</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Proxy</a>
+<ul>
+<li><a href="#sec-1-1-1">1.1.1. 静态代理</a></li>
+<li><a href="#sec-1-1-2">1.1.2. JDK 动态代理</a></li>
+<li><a href="#sec-1-1-3">1.1.3. CGLib 动态代理</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">1.2. AOP</a></li>
+<li><a href="#sec-1-3">1.3. 声明式事务</a>
+<ul>
+<li><a href="#sec-1-3-1">1.3.1. 在 xml 中，用 aop 的方式配置:</a></li>
+<li><a href="#sec-1-3-2">1.3.2. 使用 @Transactional 注解的方法:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Spring MVC</a>
+<ul>
+<li><a href="#sec-2-1">2.1. 创建 MVC 项目基本步骤</a></li>
+<li><a href="#sec-2-2">2.2. Parameters</a>
+<ul>
+<li><a href="#sec-2-2-1">2.2.1. 基本类型的自动绑定</a></li>
+<li><a href="#sec-2-2-2">2.2.2. 集合类型的自动绑定</a></li>
+<li><a href="#sec-2-2-3">2.2.3. 对象的自动封装</a></li>
+<li><a href="#sec-2-2-4">2.2.4. HttpSession/HttpServletRequest 等的自动绑定</a></li>
+<li><a href="#sec-2-2-5">2.2.5. @RequestParam</a></li>
+<li><a href="#sec-2-2-6">2.2.6. @RequestAttribute</a></li>
+<li><a href="#sec-2-2-7">2.2.7. @CookieValue</a></li>
+<li><a href="#sec-2-2-8">2.2.8. @RequestHeader</a></li>
+<li><a href="#sec-2-2-9">2.2.9. @PathVariable</a></li>
+<li><a href="#sec-2-2-10">2.2.10. @RequestBody</a></li>
+<li><a href="#sec-2-2-11">2.2.11. @ResponseBody</a></li>
+<li><a href="#sec-2-2-12">2.2.12. @SessionAttribute</a></li>
+<li><a href="#sec-2-2-13">2.2.13. @ModelAttribute</a></li>
+<li><a href="#sec-2-2-14">2.2.14. Errors/BindingResult</a></li>
+<li><a href="#sec-2-2-15">2.2.15. Model/View/ModelAndView</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-3">2.3. 请求流程</a></li>
+<li><a href="#sec-2-4">2.4. Validation(表单验证)</a>
+<ul>
+<li><a href="#sec-2-4-1">2.4.1. 最基本的校验</a></li>
+<li><a href="#sec-2-4-2">2.4.2. 自定义验证器</a></li>
+<li><a href="#sec-2-4-3">2.4.3. JSR-303 风格校验</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-5">2.5. PropertyEditor/Convertor/Formater(日期转换为例)</a>
+<ul>
+<li><a href="#sec-2-5-1">2.5.1. 第一种方法：利用内置的 CustomDateEditor</a></li>
+<li><a href="#sec-2-5-2">2.5.2. 第二种方法：实现自定义转换器</a></li>
+<li><a href="#sec-2-5-3">2.5.3. 第三种方法：使用 @DateTimeFormat 注解</a></li>
+<li><a href="#sec-2-5-4">2.5.4. 日期在页面上的显示</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-6">2.6. Exception(异常处理)</a>
+<ul>
+<li><a href="#sec-2-6-1">2.6.1. HandlerExceptionResolver</a></li>
+<li><a href="#sec-2-6-2">2.6.2. @ExceptionHandler 注解</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-7">2.7. Interceptor(拦截器)</a></li>
+<li><a href="#sec-2-8">2.8. MessageSource(国际化，资源文件)</a></li>
+<li><a href="#sec-2-9">2.9. MultipartFile(文件的上传)</a></li>
+<li><a href="#sec-2-10">2.10. 集成 javaMail 发送邮件</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. Spring Data JPA</a>
+<ul>
+<li><a href="#sec-3-1">3.1. step by step</a>
+<ul>
+<li><a href="#sec-3-1-1">3.1.1. 引入 Spring data 的 jar 包</a></li>
+<li><a href="#sec-3-1-2">3.1.2. 实现我们自己的接口</a></li>
+<li><a href="#sec-3-1-3">3.1.3. 实现我们的自定义方法</a></li>
+<li><a href="#sec-3-1-4">3.1.4. 调用</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-2">3.2. More</a></li>
+<li><a href="#sec-3-3">3.3. 人工智能关键词示例</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+
+
+<section id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Spring AOP</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Proxy</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+[例] 一个女孩要表白
+</p>
+
+<p>
+先定义这个女孩的接口跟类
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-comment-delimiter">// </span><span class="org-comment">&#25509;&#21475;&#65292;&#21253;&#21547;&#19968;&#20010;&#34920;&#30333;(sayLove)&#30340;&#26041;&#27861;</span>
+<span class="org-keyword">public</span> <span class="org-keyword">interface</span> <span class="org-type">Person</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-type">void</span> <span class="org-function-name">sayLove</span><span class="org-rainbow-delimiters-depth-2">()</span>;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+
+
+<span class="org-comment-delimiter">// </span><span class="org-comment">&#20855;&#20307;&#31867;&#65292;&#19968;&#20010;&#35201;&#21435;&#34920;&#30333;&#30340;&#22899;&#23401;&#20799;</span>
+<span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">Girl</span> <span class="org-keyword">implements</span> <span class="org-type">Person</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-c-annotation">@Override</span>
+    <span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">sayLove</span><span class="org-rainbow-delimiters-depth-2">()</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        System.out.println<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"&#25105;&#29233;&#20320;."</span><span class="org-rainbow-delimiters-depth-3">)</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+<p>
+如果不通过代理的方式，那么表白的代码如下：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-function-name">main</span> <span class="org-rainbow-delimiters-depth-1">()</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-type">Girl</span> <span class="org-variable-name">z</span> = <span class="org-keyword">new</span> <span class="org-type">Girl</span><span class="org-rainbow-delimiters-depth-2">()</span>;
+    z.sayLove<span class="org-rainbow-delimiters-depth-2">()</span>;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+<p>
+但是在某些情况下，直接表白是不合适的，所以需要有人出面玉成此事。
+这个时候，需要代理。代理出面，代替女孩儿求爱。
+</p>
+
+<p>
+分为静态代理和动态代理。
+</p>
+</div>
+
+<div id="outline-container-sec-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> 静态代理</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+实现方式有两种：继承、聚合
+</p>
+
+<p>
+首先，继承的方式：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-comment-delimiter">// </span><span class="org-comment">&#36825;&#23601;&#26159;&#35201;&#24110;&#24537;&#20986;&#38754;&#30340;&#20195;&#29702;&#65292;&#23427;&#38656;&#35201;&#26377; sayLove() &#26041;&#27861;</span>
+<span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">LoveProxy</span> <span class="org-keyword">extends</span> <span class="org-type">Girl</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-c-annotation">@Override</span>
+    <span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">sayLove</span><span class="org-rainbow-delimiters-depth-2">()</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-keyword">super</span>.sayLove<span class="org-rainbow-delimiters-depth-3">()</span>;
+        System.out.println<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"&#31069;&#20320;&#20204;&#33021;&#30333;&#22836;&#20565;&#32769;."</span><span class="org-rainbow-delimiters-depth-3">)</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+
+
+<span class="org-comment-delimiter">// </span><span class="org-comment">&#25191;&#34892;</span>
+<span class="org-function-name">main</span><span class="org-rainbow-delimiters-depth-1">()</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-type">LoveProxy</span> <span class="org-variable-name">m</span> = <span class="org-keyword">new</span> <span class="org-type">LoveProxy</span><span class="org-rainbow-delimiters-depth-2">()</span>;
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#35753;&#20195;&#29702;&#24110;&#21161;&#34920;&#30333;</span>
+    m.sayLove<span class="org-rainbow-delimiters-depth-2">()</span>;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+
+<p>
+其次，聚合的方式。很重要的方式。这种方式必须要有接口。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-comment-delimiter">// </span><span class="org-comment">&#38656;&#35201;&#23454;&#29616; Girl &#30456;&#21516;&#30340;&#25509;&#21475;&#65292;&#25105;&#20204;&#30340;&#20195;&#29702;&#24517;&#39035;&#35201;&#26377; sayLove() &#26041;&#27861;</span>
+<span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">LoveProxy</span> <span class="org-keyword">implements</span> <span class="org-type">Person</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-type">Girl</span> <span class="org-variable-name">z</span> = <span class="org-constant">null</span>;
+    <span class="org-keyword">public</span> <span class="org-function-name">LoveProxy</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">Girl</span> <span class="org-variable-name">g</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-keyword">this</span>.z = g;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+
+    <span class="org-c-annotation">@Override</span>
+    <span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">sayLove</span><span class="org-rainbow-delimiters-depth-2">()</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        z.sayLove<span class="org-rainbow-delimiters-depth-3">()</span>;
+        System.out.println<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"&#25105;&#20204;&#22312;&#19968;&#36215;&#21543;&#12290;"</span><span class="org-rainbow-delimiters-depth-3">)</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+
+
+<span class="org-function-name">main</span><span class="org-rainbow-delimiters-depth-1">()</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-type">LoveProxy</span> <span class="org-variable-name">m</span> = <span class="org-keyword">new</span> <span class="org-type">LoveProxy</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">new</span> <span class="org-type">Girl</span><span class="org-rainbow-delimiters-depth-3">()</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+    m.sayLove<span class="org-rainbow-delimiters-depth-2">()</span>;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2"><span class="section-number-4">1.1.2</span> JDK 动态代理</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+JDK 的动态代理，必须依赖接口实现
+</p>
+
+<p>
+首先，要创建一个代理的 <b>生成器</b> ，用来为某个类生成代理。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">JDKLoveProxyGenerator</span> <span class="org-keyword">implements</span> <span class="org-type">InvocationHandler</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+
+    <span class="org-type">Object</span> <span class="org-variable-name">z</span> = <span class="org-constant">null</span>;
+
+    <span class="org-keyword">public</span> <span class="org-function-name">JDKLoveProxyGenerator</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">Object</span> <span class="org-variable-name">g</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-keyword">this</span>.z = g;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+
+    <span class="org-c-annotation">@Override</span>
+    <span class="org-keyword">public</span> <span class="org-type">Object</span> <span class="org-function-name">invoke</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">Object</span> <span class="org-variable-name">proxy</span>, <span class="org-type">Method</span> <span class="org-variable-name">method</span>, <span class="org-type">Object</span><span class="org-rainbow-delimiters-depth-3">[]</span> <span class="org-variable-name">args</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-keyword">throws</span> <span class="org-type">Throwable</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-comment-delimiter">// </span><span class="org-comment">&#29992;&#21453;&#23556;&#30340;&#26041;&#24335;&#65292;&#35843;&#29992; z &#37324;&#30340;&#21407;&#26041;&#27861;</span>
+        <span class="org-type">Object</span> <span class="org-variable-name">result</span> = method.invoke<span class="org-rainbow-delimiters-depth-3">(</span>z, args<span class="org-rainbow-delimiters-depth-3">)</span>;
+        System.out.println<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"&#20320;&#20204;&#30495;&#30340;&#33021;&#22815;&#22312;&#19968;&#36215;&#12290;"</span><span class="org-rainbow-delimiters-depth-3">)</span>;
+        <span class="org-keyword">return</span> result;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+
+<p>
+利用上边的代理生成器，生成一个帮助我们做事的代理。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-function-name">main</span><span class="org-rainbow-delimiters-depth-1">()</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#36890;&#36807;&#20195;&#29702;&#29983;&#25104;&#22120;&#65292;&#20026; Girl &#21019;&#24314;&#19968;&#20010;&#20195;&#29702;</span>
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#27880;&#24847;&#65292;&#29983;&#25104;&#30340;&#20195;&#29702;&#31867;&#26159; Person &#25509;&#21475;&#30340;&#19968;&#20010;&#23454;&#29616;</span>
+    <span class="org-type">Person</span> <span class="org-variable-name">loveProxy</span> = <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">Person</span><span class="org-rainbow-delimiters-depth-2">)</span> Proxy
+        .newProxyInstance<span class="org-rainbow-delimiters-depth-2">(</span>Girl.<span class="org-keyword">class</span>.getClassLoader<span class="org-rainbow-delimiters-depth-3">()</span>,
+                          Girl.<span class="org-keyword">class</span>.getInterfaces<span class="org-rainbow-delimiters-depth-3">()</span>,
+                          <span class="org-keyword">new</span> <span class="org-type">JDKLoveProxyGenerator</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">new</span> <span class="org-type">Girl</span><span class="org-rainbow-delimiters-depth-4">()</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#35753;&#20195;&#29702;&#24110;&#21161;&#20570;&#26576;&#20123;&#20107;</span>
+    loveProxy.sayLove<span class="org-rainbow-delimiters-depth-2">()</span>;
+
+
+    System.out.println<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"--------------------"</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#19968;&#20010;&#21160;&#24577;&#20195;&#29702;&#29983;&#25104;&#22120;&#65292;&#21487;&#20197;&#20026;&#22810;&#20010;&#19981;&#21516;&#30340;&#25509;&#21475;&#29983;&#25104;&#20195;&#29702;</span>
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#19979;&#38754;&#20026; Dog &#29983;&#25104;&#19968;&#20010;&#20195;&#29702;</span>
+    <span class="org-type">Animal</span> <span class="org-variable-name">animalLoveProxy</span> = <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">Animal</span><span class="org-rainbow-delimiters-depth-2">)</span> Proxy
+        .newProxyInstance<span class="org-rainbow-delimiters-depth-2">(</span>Dog.<span class="org-keyword">class</span>.getClassLoader<span class="org-rainbow-delimiters-depth-3">()</span>,
+                          Dog.<span class="org-keyword">class</span>.getInterfaces<span class="org-rainbow-delimiters-depth-3">()</span>,
+                          <span class="org-keyword">new</span> <span class="org-type">JDKLoveProxy</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">new</span> <span class="org-type">Dog</span><span class="org-rainbow-delimiters-depth-4">()</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+    animalLoveProxy.sayLove<span class="org-rainbow-delimiters-depth-2">()</span>;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3"><span class="section-number-4">1.1.3</span> CGLib 动态代理</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+CGLib 动态代理使用的是直接修改 Class 字节码的方式实现，它并不需要接口。
+</p>
+
+<p>
+如果使用 CGLib 的动态代理，首先，要在工程中加入 cglib 的 jar 包支持：
+</p>
+<pre class="example">
+compile "cglib:cglib:3.2.4"
+</pre>
+
+<p>
+其次，使用 CGLib 实现我们的 <b>代理生成器</b> ，只要实现 MethodInterceptor 接口即可：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">CGLibLoveProxyGenerator</span> <span class="org-keyword">implements</span> <span class="org-type">MethodInterceptor</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-c-annotation">@Override</span>
+    <span class="org-keyword">public</span> <span class="org-type">Object</span> <span class="org-function-name">intercept</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">Object</span> <span class="org-variable-name">obj</span>, <span class="org-type">Method</span> <span class="org-variable-name">method</span>, <span class="org-type">Object</span><span class="org-rainbow-delimiters-depth-3">[]</span> <span class="org-variable-name">args</span>, <span class="org-type">MethodProxy</span> <span class="org-variable-name">proxy</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-keyword">throws</span> <span class="org-type">Throwable</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+
+        <span class="org-type">Object</span> <span class="org-variable-name">result</span> = <span class="org-constant">null</span>;
+
+        System.out.println<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"&#36825;&#20010;&#20301;&#32622;&#26159; @Before &#36890;&#30693;"</span><span class="org-rainbow-delimiters-depth-3">)</span>;
+
+        <span class="org-keyword">try</span> <span class="org-rainbow-delimiters-depth-3">{</span>
+            <span class="org-comment-delimiter">// </span><span class="org-comment">&#35843;&#29992;&#21407;&#26041;&#27861;</span>
+            result = proxy.invokeSuper<span class="org-rainbow-delimiters-depth-4">(</span>obj, args<span class="org-rainbow-delimiters-depth-4">)</span>;
+            System.out.println<span class="org-rainbow-delimiters-depth-4">(</span><span class="org-string">"&#36825;&#20010;&#20301;&#32622;&#26159; @AfterReturning &#36890;&#30693;&#65292;&#36825;&#37324;&#21487;&#20197;&#24341;&#29992;&#21040;&#21407;&#20989;&#25968;&#30340;&#36820;&#22238;&#20540;"</span><span class="org-rainbow-delimiters-depth-4">)</span>;
+            <span class="org-keyword">return</span> result;
+        <span class="org-rainbow-delimiters-depth-3">}</span>
+        <span class="org-keyword">catch</span> <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-type">Throwable</span> <span class="org-variable-name">e</span><span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">{</span>
+            System.out.println<span class="org-rainbow-delimiters-depth-4">(</span><span class="org-string">"&#36825;&#20010;&#20301;&#32622;&#26159; @AtferThrowing &#36890;&#30693;&#65292;&#36825;&#37324;&#21487;&#20197;&#24341;&#29992;&#21040;&#24322;&#24120;&#21464;&#37327;"</span><span class="org-rainbow-delimiters-depth-4">)</span>;
+        <span class="org-rainbow-delimiters-depth-3">}</span> <span class="org-keyword">finally</span> <span class="org-rainbow-delimiters-depth-3">{</span>
+            System.out.println<span class="org-rainbow-delimiters-depth-4">(</span><span class="org-string">"&#25105;&#26159;&#19968;&#20010; @After &#36890;&#30693;"</span><span class="org-rainbow-delimiters-depth-4">)</span>;
+        <span class="org-rainbow-delimiters-depth-3">}</span>
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+<p>
+然后，就可以用上面的 CGLibLoveProxyGenerator 为某个类生成代理了：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-function-name">main</span><span class="org-rainbow-delimiters-depth-1">()</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+
+    <span class="org-doc">/**</span>
+<span class="org-doc">     * &#36825;&#26159;&#19968;&#20010;&#20351;&#29992; JDK &#21160;&#24577;&#20195;&#29702;&#30340;&#20363;&#23376;&#12290;</span>
+<span class="org-doc">     */</span>
+    <span class="org-type">Person</span> <span class="org-variable-name">loveProxy</span> = <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">Person</span><span class="org-rainbow-delimiters-depth-2">)</span> Proxy
+        .newProxyInstance<span class="org-rainbow-delimiters-depth-2">(</span>Girl.<span class="org-keyword">class</span>.getClassLoader<span class="org-rainbow-delimiters-depth-3">()</span>,             <span class="org-comment-delimiter">// </span><span class="org-comment">classLoader</span>
+                          Girl.<span class="org-keyword">class</span>.getInterfaces<span class="org-rainbow-delimiters-depth-3">()</span>,              <span class="org-comment-delimiter">// </span><span class="org-comment">&#25509;&#21475;</span>
+                          <span class="org-keyword">new</span> <span class="org-type">JDKLoveProxyGenerator</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">new</span> <span class="org-type">Girl</span><span class="org-rainbow-delimiters-depth-4">()</span><span class="org-rainbow-delimiters-depth-3">)</span>    <span class="org-comment-delimiter">// </span><span class="org-comment">&#20195;&#29702;&#29983;&#25104;&#22120;</span>
+                          <span class="org-rainbow-delimiters-depth-2">)</span>;                    <span class="org-comment-delimiter">// </span><span class="org-comment">&#27880;&#24847;&#65292;&#29983;&#25104;&#30340;&#20195;&#29702;&#30340;&#31867;&#22411;&#26159; Person</span>
+
+    loveProxy.sayLove<span class="org-rainbow-delimiters-depth-2">()</span>;
+
+
+
+    <span class="org-doc">/**</span>
+<span class="org-doc">     * &#36825;&#26159;&#19968;&#20010;&#20351;&#29992; CGLib &#21160;&#24577;&#20195;&#29702;&#30340;&#20363;&#23376;&#12290;</span>
+<span class="org-doc">     * &#36319;&#19978;&#38754;&#29992; JDK &#20195;&#29702;&#26041;&#24335;&#27604;&#36739;&#65292;&#21457;&#29616;&#23427;&#20204;&#20854;&#23454;&#26159;&#19968;&#33268;&#30340;&#12290;</span>
+<span class="org-doc">     */</span>
+    <span class="org-type">Enhancer</span> <span class="org-variable-name">enhancer</span> = <span class="org-keyword">new</span> <span class="org-type">Enhancer</span><span class="org-rainbow-delimiters-depth-2">()</span>;
+    enhancer.setClassLoader<span class="org-rainbow-delimiters-depth-2">(</span>Dog.<span class="org-keyword">class</span>.getClassLoader<span class="org-rainbow-delimiters-depth-3">()</span><span class="org-rainbow-delimiters-depth-2">)</span>; <span class="org-comment-delimiter">// </span><span class="org-comment">classLoader</span>
+    enhancer.setSuperclass<span class="org-rainbow-delimiters-depth-2">(</span>Dog.<span class="org-keyword">class</span><span class="org-rainbow-delimiters-depth-2">)</span>;                   <span class="org-comment-delimiter">// </span><span class="org-comment">&#29238;&#31867;</span>
+    enhancer.setCallback<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">new</span> <span class="org-type">CGLibLoveProxyGenerator</span><span class="org-rainbow-delimiters-depth-3">()</span><span class="org-rainbow-delimiters-depth-2">)</span>; <span class="org-comment-delimiter">// </span><span class="org-comment">&#20195;&#29702;&#29983;&#25104;&#22120;</span>
+
+    <span class="org-type">Dog</span> <span class="org-variable-name">dogProxy</span> = <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">Dog</span><span class="org-rainbow-delimiters-depth-2">)</span> enhancer.create<span class="org-rainbow-delimiters-depth-2">()</span>;    <span class="org-comment-delimiter">// </span><span class="org-comment">&#27880;&#24847;&#65292;&#29983;&#25104;&#30340;&#20195;&#29702;&#30340;&#31867;&#22411;&#26159; Dog</span>
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#20854;&#23454;&#65292;&#19978;&#38754;&#21019;&#24314; dogProxy &#30340;&#20195;&#30721;&#21487;&#20197;&#31616;&#20889;&#20026;:</span>
+    <span class="org-comment-delimiter">// </span><span class="org-comment">Dog dogProxy = (Dog) Enhancer.create(Dog.class, null, new CGLibLoveProxyGenerator());</span>
+
+    dogProxy.sayLove<span class="org-rainbow-delimiters-depth-2">()</span>;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> AOP</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+AspectJ 是一个支持面向切面编程的包。除了 AspectJ，还有 Jboss AOP 和 Spring AOP。
+</p>
+
+<p>
+Spring AOP 的实现不够好，所以在 spring 中一般开启 AspectJ 的支持。
+</p>
+
+<p>
+Spring AOP 采用动态织入，AspectJ 采用静态织入。
+</p>
+
+
+<p>
+<b>几个相关概念：</b>
+</p>
+<ol class="org-ol">
+<li>Advice: 要向目标位置加入什么
+</li>
+<li>Pointcut: 要加到哪些位置
+</li>
+<li>Aspect: 一系列 Advice + Pointcut 的集合。
+</li>
+<li>Joinpoint: Pointcut 中的具体某个位置
+</li>
+</ol>
+
+
+<p>
+<b>在 Spring 中使用 AspectJ:</b>
+</p>
+
+<p>
+第一步，加入jar包：
+</p>
+<pre class="example">
+compile "org.aspectj:aspectjweaver:1.8.9
+</pre>
+
+<p>
+第二步，在 spring.xml 中，增加 aspectj 的支持。
+</p>
+<pre class="example">
+&lt;aop:aspectj-autoproxy proxy-target-class="true" /&gt;
+</pre>
+
+<p>
+第三步，创建切面，放入容器。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-comment-delimiter">// </span><span class="org-comment">&#20808;&#23450;&#20041;&#19968;&#20010;&#26085;&#24535;&#30456;&#20851;&#30340;&#20999;&#38754;</span>
+<span class="org-c-annotation">@Component</span>
+<span class="org-c-annotation">@Aspect</span>
+<span class="org-c-annotation">@Order</span><span class="org-rainbow-delimiters-depth-1">(</span>2<span class="org-rainbow-delimiters-depth-1">)</span>  <span class="org-comment-delimiter">// </span><span class="org-comment">&#22914;&#26524;&#23450;&#20041;&#20102;&#22810;&#20010;&#20999;&#38754;&#65292;&#30001; order &#26469;&#20915;&#23450;&#20808;&#21518;&#25191;&#34892;&#39034;&#24207;&#65292;&#36234;&#23567;&#36234;&#38752;&#21069;</span>
+<span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">LogAspect</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#23450;&#20041; Pointcut&#65292;&#26041;&#20415;&#22797;&#29992;</span>
+    <span class="org-c-annotation">@Pointcut</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"execution(* edu.nf.emptyproject.service.UserService(..))"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-keyword">private</span> <span class="org-type">void</span> <span class="org-function-name">log1</span><span class="org-rainbow-delimiters-depth-2">()</span> <span class="org-rainbow-delimiters-depth-2">{}</span>
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#23450;&#20041;&#21069;&#32622;&#36890;&#30693;</span>
+    <span class="org-c-annotation">@Before</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"execution(* edu.nf.emptyproject.service.UserService.*(..))"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">sayHello</span><span class="org-rainbow-delimiters-depth-2">()</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        System.out.println<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"&#12304;AOP&#12305; hello..."</span><span class="org-rainbow-delimiters-depth-3">)</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#23450;&#20041;&#21518;&#32622;&#36890;&#30693;</span>
+    <span class="org-c-annotation">@After</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"execution(* edu.nf.emptyproject.service.UserService.find*(..))"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">sayBye</span><span class="org-rainbow-delimiters-depth-2">()</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        System.out.println<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"&#12304;AOP&#12305; Goodbye..."</span><span class="org-rainbow-delimiters-depth-3">)</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+
+
+<span class="org-comment-delimiter">// </span><span class="org-comment">&#23450;&#20041;&#19968;&#20010;&#35745;&#31639;&#36816;&#34892;&#26102;&#38388;&#30340;&#20999;&#38754;</span>
+<span class="org-c-annotation">@Component</span>
+<span class="org-c-annotation">@Aspect</span>
+<span class="org-c-annotation">@Order</span><span class="org-rainbow-delimiters-depth-1">(</span>1<span class="org-rainbow-delimiters-depth-1">)</span>
+<span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">BenchmarkAspect</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+
+    <span class="org-c-annotation">@Around</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"execution(* edu.nf.emptyproject.service.UserService.*(..)))"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-keyword">public</span> <span class="org-type">Object</span> <span class="org-function-name">doSomePrivsCheck</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">ProceedingJoinPoint</span> <span class="org-variable-name">joinPoint</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-keyword">throws</span> <span class="org-type">Throwable</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-type">long</span> <span class="org-variable-name">start</span> = System.currentTimeMillis<span class="org-rainbow-delimiters-depth-3">()</span>;
+        <span class="org-type">Object</span> <span class="org-variable-name">ret</span> = joinPoint.proceed<span class="org-rainbow-delimiters-depth-3">()</span>;
+        System.out.printf<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"&#12304;AOP&#12305; &#25191;&#34892;&#26041;&#27861; %s &#19968;&#20849;&#29992;&#20102; %d ms\n"</span>, joinPoint.getSignature<span class="org-rainbow-delimiters-depth-4">()</span>.getName<span class="org-rainbow-delimiters-depth-4">()</span>, System.currentTimeMillis<span class="org-rainbow-delimiters-depth-4">()</span> - start<span class="org-rainbow-delimiters-depth-3">)</span>;
+        <span class="org-keyword">return</span> ret;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+
+<p>
+最后，来一发例子：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-function-name">main</span> <span class="org-rainbow-delimiters-depth-1">()</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-type">ApplicationContext</span> <span class="org-variable-name">context</span> = <span class="org-keyword">new</span> <span class="org-type">ClassPathXmlApplicationContext</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"spring.xml"</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+    <span class="org-type">UserService</span> <span class="org-variable-name">userService</span> = context.getBean<span class="org-rainbow-delimiters-depth-2">(</span>UserService.<span class="org-keyword">class</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+    userService.sayHello<span class="org-rainbow-delimiters-depth-2">()</span>;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+
+<p>
+上面是用注解的形式实现的切面。当然可以用 xml 的方式同样做到：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">logAspect</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">edu.xxx.LogAspect</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">aop</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">config</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">aop</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">aspect</span> <span class="org-nxml-attribute-local-name">ref</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">logAspect</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">aop</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">pointcut</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">a</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">expression</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">execution(* edu..*.*(..))</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">aop</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">before</span> <span class="org-nxml-attribute-local-name">method</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">sayHello</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">pointcut-ref</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">a</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-prefix">aop</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">aspect</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-prefix">aop</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">config</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+
+<p>
+Ok.
+</p>
+
+
+<p>
+<b>注：AspectJ 表达式函数:</b><br >
+</p>
+<table>
+
+
+<colgroup>
+<col  class="left">
+
+<col  class="left">
+</colgroup>
+<tbody>
+<tr>
+<td class="left">函数</td>
+<td class="left">说明</td>
+</tr>
+
+<tr>
+<td class="left">excution()</td>
+<td class="left">excution(* com.*.*(..)), 表示匹配 com 包下所有方法</td>
+</tr>
+
+<tr>
+<td class="left">args()</td>
+<td class="left">arg(int, int), 表示匹配所有参数为int, int的方法</td>
+</tr>
+
+<tr>
+<td class="left">within()</td>
+<td class="left">within(sss.*), 匹配sss包下所有的类下的所有方法</td>
+</tr>
+
+<tr>
+<td class="left">target()</td>
+<td class="left">target(sss.Test), 匹配所有的类及其子类</td>
+</tr>
+
+<tr>
+<td class="left">this()</td>
+<td class="left">this(sss.Test), 当前 AOP 对象实现了Test接口的所有方法</td>
+</tr>
+
+<tr>
+<td class="left">@annotation()</td>
+<td class="left">@annotation(com.Test), 表示匹配所有标注了@Test的方法</td>
+</tr>
+
+<tr>
+<td class="left">@args()</td>
+<td class="left">@arg(Test), 匹配参数注解为Test的方法</td>
+</tr>
+
+<tr>
+<td class="left">@within()</td>
+<td class="left">@within(sss.Test), 匹配所有使用Test注解的类的所有方法</td>
+</tr>
+
+<tr>
+<td class="left">@target</td>
+<td class="left">@target(sss.Test), 所有当前目标对象使用Test注解的类的所有方法</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> 声明式事务</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+事务配置分为三个部分： DataSource + TransactionManager + Proxy。
+</p>
+
+<p>
+首先，在 spring.xml 中配置事务管理器(TransactionManager)：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">transactionManager</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">org.springframework.orm.hibernate5.HibernateTransactionManager</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">sessionFactory</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">ref</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">sessionFactory</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">bean</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+
+
+<p>
+然后，通过 xml 或 annotation 的方式配置事务：
+</p>
+</div>
+
+<div id="outline-container-sec-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> 在 xml 中，用 aop 的方式配置:</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#20351;&#29992;&#20107;&#21153;&#31649;&#29702;&#22120;&#65292;&#29983;&#25104;&#20107;&#21153;&#30340; advisor </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">tx</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">advice</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">txAdvice</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">transaction-manager</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">transactionManager</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">tx</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">attributes</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#21487;&#20197;&#37197;&#32622;&#20107;&#21153;&#30340;&#23646;&#24615; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">tx</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">method</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">get*</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">read-only</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">true</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">tx</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">method</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">list*</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">read-only</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">true</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-prefix">tx</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">attributes</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-prefix">tx</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">advice</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#20026;&#25351;&#23450;&#31867;&#30340;&#25351;&#23450;&#26041;&#27861;&#65292;&#32455;&#20837;&#20107;&#21153;&#20195;&#30721; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">aop</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">config</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">aop</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">pointcut</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">services</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">expression</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">execution(* fish.miniblog.service.*.*(..))</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">aop</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">advisor</span> <span class="org-nxml-attribute-local-name">pointcut-ref</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">services</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">advice-ref</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">txAdvice</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-prefix">aop</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">config</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> 使用 @Transactional 注解的方法:</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<p>
+首先，在 spring.xml 中启用事务注解:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">tx</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">annotation-driven</span> <span class="org-nxml-attribute-local-name">transaction-manager</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">transactionManager</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+
+<p>
+然后，就可以肆无忌惮使用 @Transactional 注解了。
+</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Spring MVC</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 创建 MVC 项目基本步骤</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+第一步，创建 Gradle 项目，在 build.gradle 增加相关依赖
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-type">apply</span> <span class="org-variable-name">plugin</span>: <span class="org-string">'java'</span>
+apply plugin: <span class="org-string">'war'</span>
+
+<span class="org-comment-delimiter">// </span><span class="org-comment">&#25351;&#23450; Java &#29256;&#26412;</span>
+sourceCompatibility = 1.8
+
+<span class="org-comment-delimiter">// </span><span class="org-comment">&#37197;&#32622;&#19979;&#36733; jar &#21253;&#30340;&#22320;&#22336;</span>
+repositories <span class="org-rainbow-delimiters-depth-1">{</span>
+  mavenCentral<span class="org-rainbow-delimiters-depth-2">()</span>
+  jcenter<span class="org-rainbow-delimiters-depth-2">()</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+
+<span class="org-comment-delimiter">// </span><span class="org-comment">&#37197;&#32622;&#38656;&#35201;&#30340; jar &#21253;&#20381;&#36182;</span>
+dependencies <span class="org-rainbow-delimiters-depth-1">{</span>
+
+  <span class="org-comment-delimiter">// </span><span class="org-comment">&#23450;&#20041;&#20004;&#20010;&#23616;&#37096;&#21464;&#37327;</span>
+  <span class="org-comment-delimiter">// </span><span class="org-comment">&#36825;&#37324;&#20195;&#34920;&#25105;&#20204;&#38656;&#35201;&#30340; hibernate &#21644; spring &#30340;&#29256;&#26412;</span>
+  <span class="org-type">def</span> <span class="org-variable-name">hibernateVersion</span> = <span class="org-string">"5.1.0.Final"</span>
+  def springVersion = <span class="org-string">"4.3.5.RELEASE"</span>
+
+  <span class="org-comment-delimiter">// </span><span class="org-comment">&#22312; test &#20013;&#38656;&#35201;&#29992;&#21040;&#30340; jar &#21253;</span>
+  testCompile <span class="org-rainbow-delimiters-depth-2">(</span>
+    <span class="org-string">"junit:junit:4.12"</span>
+  <span class="org-rainbow-delimiters-depth-2">)</span>
+
+  <span class="org-comment-delimiter">// </span><span class="org-comment">&#25351;&#26126; Tomcat &#19978;&#24050;&#32463;&#33258;&#24102;&#30340; jar &#21253;&#65292;&#36825;&#26679;&#21457;&#24067;&#30340;&#26102;&#20505;&#25165;&#19981;&#20250;&#37325;&#22797;</span>
+  providedCompile <span class="org-rainbow-delimiters-depth-2">(</span>
+    <span class="org-string">"javax:javaee-web-api:7.0"</span>,
+  <span class="org-rainbow-delimiters-depth-2">)</span>
+
+  <span class="org-comment-delimiter">// </span><span class="org-comment">&#37197;&#32622;&#25105;&#20204;&#39033;&#30446;&#38656;&#35201;&#29992;&#21040;&#30340;&#25152;&#26377; jar &#21253;&#65292;&#21363; compile &#29615;&#33410;&#38656;&#35201;&#30340; jar &#21253;</span>
+  compile <span class="org-rainbow-delimiters-depth-2">(</span>
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#26412;&#22320;&#30340; OJDBC &#21253;&#21152;&#20837;&#36827;&#26469;&#65292;&#35201;&#25913;&#25104;&#33258;&#24049;&#30340;&#36335;&#24452;</span>
+    files<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"E:/SSH/lib_hibernate/ojdbc7.jar"</span><span class="org-rainbow-delimiters-depth-3">)</span>,
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#29992;&#26469;&#31649;&#29702;&#25968;&#25454;&#28304;&#30340;&#30693;&#21517; jar &#21253;</span>
+    <span class="org-string">"c3p0:c3p0:0.9.1.2"</span>,
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">jsp &#20013; jstl &#26631;&#31614;&#30340;&#25903;&#25345; jar &#21253;</span>
+    <span class="org-string">"javax.servlet:jstl:1.2"</span>,
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">log4j &#26085;&#24535;&#25903;&#25345;&#30340; jar &#21253;</span>
+    <span class="org-string">"log4j:log4j:1.2.17"</span>,
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#37197;&#32622; hibernate</span>
+    <span class="org-string">"org.hibernate:hibernate-core:$hibernateVersion"</span>,
+    <span class="org-string">"org.hibernate:hibernate-validator:5.4.0.Final"</span>,
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#37197;&#32622; spring</span>
+    <span class="org-string">"org.springframework:spring-web:$springVersion"</span>,
+    <span class="org-string">"org.springframework:spring-orm:$springVersion"</span>,
+    <span class="org-string">"org.springframework:spring-aop:$springVersion"</span>,
+    <span class="org-string">"org.springframework:spring-webmvc:$springVersion"</span>,
+    <span class="org-string">"com.fasterxml.jackson.core:jackson-databind:2.5.1"</span>,
+  <span class="org-rainbow-delimiters-depth-2">)</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+
+
+<span class="org-comment-delimiter">// </span><span class="org-comment">&#20026;&#32534;&#35793;&#22120;&#37197;&#32622;&#32534;&#30721;&#65292;&#38450;&#27490;&#26576;&#20123;&#24773;&#20917;&#19979;&#32534;&#35793;&#20986;&#29616;&#20081;&#30721;&#30340;&#24773;&#20917;</span>
+<span class="org-comment-delimiter">// </span><span class="org-comment">&#30456;&#24212;&#30340;&#65292;&#25105;&#20204;&#25152;&#26377;&#30340;&#20195;&#30721;&#24212;&#35813;&#20445;&#23384;&#25104; UTF-8 &#26684;&#24335;</span>
+tasks.<span class="org-function-name">withType</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-type">JavaCompile</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+  options.encoding = <span class="org-string">"UTF-8"</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+
+
+<span class="org-comment-delimiter">// </span><span class="org-comment">&#33258;&#23450;&#20041;&#20219;&#21153;&#65292;&#23558;&#24037;&#31243;&#25152;&#38656;&#35201;&#30340; jar &#21253;&#25335;&#36125;&#21040;&#39033;&#30446;&#19979;&#30340; lib &#25991;&#20214;&#22841;&#19979;</span>
+<span class="org-comment-delimiter">// </span><span class="org-comment">&#38656;&#35201;&#25163;&#21160;&#25191;&#34892;&#36825;&#20010; task &#25165;&#20250;&#26377;&#25928;&#26524;&#12290;&#36825;&#26159;&#20026;&#20102;&#26041;&#20415;&#23548;&#20986; jar &#21253;</span>
+<span class="org-type">task</span> <span class="org-function-name">copyJars</span><span class="org-rainbow-delimiters-depth-1">(</span>type: Copy<span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+  <span class="org-comment-delimiter">// </span><span class="org-comment">&#25351;&#26126;&#25105;&#20204;&#23548;&#20986;&#30340;&#26159; compile &#21644; test &#25152;&#20381;&#36182;&#30340; jar &#21253;</span>
+  <span class="org-type">from</span> configurations.<span class="org-variable-name">compile</span>, configurations.<span class="org-type">testCompile</span>
+  <span class="org-comment-delimiter">// </span><span class="org-comment">&#25351;&#26126;&#23548;&#20986;&#21040; "lib" &#25991;&#20214;&#22841;&#19979;</span>
+  <span class="org-variable-name">into</span> <span class="org-string">"lib"</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+<p>
+第二步，配置 web.xml，加入 spring 和 mvc 支持
+</p>
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#22914;&#26524;&#20351;&#29992; RESTful &#39118;&#26684;&#30340;&#32534;&#31243;&#65292;&#38656;&#35201;&#21152;&#19978;&#36825;&#20010;&#36807;&#28388;&#22120; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#23427;&#33021;&#20351;&#24471; FORM &#25552;&#20132;&#25903;&#25345; PUT/DELETE &#31561;&#26041;&#27861; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">filter</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">filter-name</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">forRESTful</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">filter-name</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">filter-class</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">org.springframework.web.filter.HiddenHttpMethodFilter</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">filter-class</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">filter</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">filter-mapping</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">filter-name</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">forRESTful</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">filter-name</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">servlet-name</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">springmvc</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">servlet-name</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">filter-mapping</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#37197;&#32622; SpringMVC &#30340; DispatcherServlet  context (child) </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#23427;&#20250;&#20026; SpringMVC &#21019;&#24314;&#19968;&#20010;&#29420;&#31435;&#30340;&#23481;&#22120; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#22914;&#26524;&#20351;&#29992; SpringMVC&#65292;&#36825;&#37324;&#24517;&#39035;&#35201;&#37197;&#32622; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#23427;&#30340;&#29238;&#23481;&#22120;&#26159;&#19979;&#38754;&#37197;&#32622;&#30340; root Context </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#21487;&#20197;&#22312; init-param &#20013;&#25351;&#23450;&#37197;&#32622;&#25991;&#20214;&#36335;&#24452;&#65292;&#22914;&#26524;&#19981;&#37197;&#32622;&#65292;&#40664;&#35748;&#26159; "WEB-INF/miniblog-servlet.xml" </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">servlet</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">servlet-name</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">springmvc</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">servlet-name</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">servlet-class</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">org.springframework.web.servlet.DispatcherServlet</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">servlet-class</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">init-param</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">param-name</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">contextConfigLocation</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">param-name</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">param-value</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">classpath:spring-miniblog.xml</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">param-value</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">init-param</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">load-on-start</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">1</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">load-on-start</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">servlet</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">servlet-mapping</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">servlet-name</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">springmvc</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">servlet-name</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">url-pattern</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">/</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">url-pattern</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">servlet-mapping</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#37197;&#32622; spring &#30340; root application context (parent) </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#21019;&#24314;&#19968;&#20010;&#26681;&#23481;&#22120; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#22914;&#26524;&#21482;&#26159;&#20351;&#29992; SpringMVC &#20294;&#19981;&#20351;&#29992; Spring &#20854;&#20182;&#21151;&#33021;&#65292;&#36825;&#37324;&#21487;&#20197;&#19981;&#37197;&#32622; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#22312;&#36825;&#20010;&#23481;&#22120;&#37324;&#65292;&#37197;&#32622;&#19968;&#20123;&#20840;&#23616;&#30340;&#19996;&#35199; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#27604;&#22914; dao/service &#30340;&#20381;&#36182;&#65292;&#25968;&#25454;&#28304;&#65292;sessionFactory&#65292;&#22768;&#26126;&#24335;&#20107;&#21153;&#20043;&#31867; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#21487;&#20197;&#36890;&#36807; context-param &#25351;&#23450;&#37197;&#32622;&#25991;&#20214;&#36335;&#24452;&#65292;&#22914;&#26524;&#19981;&#25351;&#23450;&#65292;&#40664;&#35748;&#26159; "WEB-INF/applicationContext.xml" </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">listener</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">listener-class</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">org.springframework.web.context.ContextLoaderListener</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">listener-class</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">listener</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">context-param</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">param-name</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">contextConfigLocation</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">param-name</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">param-value</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">classpath:spring-root.xml</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">param-value</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">context-param</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+
+<p>
+第三步，配置 SpringMVC 的 context 文件(spring-miniblog.xml):
+</p>
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#27880;&#24847;&#65292;&#35201;&#24341;&#20837;&#27491;&#30830;&#30340;&#21629;&#21517;&#31354;&#38388;&#65281;&#65281;&#65281; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> mvc &#29256;&#26412;&#30340; context:annotation-driven </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#38024;&#23545; mvc &#22686;&#21152;&#20102;&#19968;&#20123;&#20854;&#20182;&#25903;&#25345;&#65292;&#38656;&#35201;&#24320;&#21551; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">mvc</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">annotation-driven</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#37197;&#32622;&#25195;&#25551;&#21457;&#29616;&#25152;&#26377;&#20855;&#26377; @Controller &#27880;&#35299;&#30340;&#31867;&#65292;&#21152;&#36733;&#21040;&#23481;&#22120; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#27880;&#24847;&#65292;&#22312; SpringMVC &#30340;&#37197;&#32622;&#25991;&#20214;&#20013;&#65292;&#19981;&#35201;&#25195;&#25551; @Controller &#20043;&#22806;&#30340;&#31867; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">context</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">component-scan</span> <span class="org-nxml-attribute-local-name">base-package</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">app.controller</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#37197;&#32622;&#38745;&#24577;&#36164;&#28304;&#30340;&#35775;&#38382;&#26144;&#23556; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#27604;&#22914;&#35775;&#38382; http://localhost/js/jquery.js&#65292;mvc &#23558;&#20250;&#21435;&#23547;&#25214; /assets/javascript/jquery.js </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">mvc</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">resources</span> <span class="org-nxml-attribute-local-name">mapping</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">/js/**</span><span class="org-nxml-attribute-value-delimiter">"</span>  <span class="org-nxml-attribute-local-name">location</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">/assets/javascript/</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">mvc</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">resources</span> <span class="org-nxml-attribute-local-name">mapping</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">/css/**</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">location</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">/assets/stylesheet/</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#37197;&#32622;&#35270;&#22270;&#35299;&#26512;&#22120;&#65292;&#23558; Controller &#36820;&#22238;&#30340;&#23383;&#31526;&#20018;&#32452;&#32455;&#25104;&#20840;&#36335;&#24452; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">viewResolver</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">org.springframework.web.servlet.view.InternalResourceViewResolver</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">prefix</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">/WEB-INF/view/</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">suffix</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">.jsp</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">bean</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#37197;&#32622;&#36164;&#28304;&#25991;&#20214;&#65292;&#22914;&#19979;&#37197;&#32622;&#65292;&#36164;&#28304;&#25991;&#20214;&#21017;&#20026; resource &#25991;&#20214;&#22841;&#19979;&#30340; message*.properties &#25110; message*.xml </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#27880;&#24847;&#65292;&#35201;&#25226;&#36164;&#28304;&#25991;&#20214;&#20445;&#23384;&#25104; UTF-8 &#26684;&#24335;&#65292;&#21542;&#21017;&#65292;&#38656;&#35201;&#22312;&#36825;&#37324;&#36890;&#36807; defaultEncoding &#25351;&#23450;&#32534;&#30721; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">messageSource</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">org.springframework.context.support.ReloadableResourceBundleMessageSource</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">basename</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">message</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">defaultEncoding</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">GBK</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">bean</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#26681;&#25454;&#38656;&#35201;&#65292;&#36824;&#21487;&#20197;&#22312;&#36825;&#20010;&#37197;&#32622;&#25991;&#20214;&#37324;&#37197;&#32622;&#25318;&#25130;&#22120;&#12289;&#36716;&#25442;&#26381;&#21153;&#31561; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+</pre>
+</div>
+
+<p>
+第四步，如果需要建立根容器，配置根容器的 context 文件(spring-root.xml):
+</p>
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#21551;&#29992;&#27880;&#35299;&#65292;&#35753; spring &#22312;&#21152;&#36733;&#30340;&#26102;&#20505;&#33258;&#21160;&#25195;&#25551;&#25351;&#23450;&#21253; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#36825;&#26679;&#20250;&#23558;&#21547;&#26377; @Service/@Repository/@Component &#31561;&#27880;&#35299;&#30340;&#31867;&#22312;&#23481;&#22120;&#20013;&#23454;&#20363;&#21270; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">context</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">component-scan</span> <span class="org-nxml-attribute-local-name">base-package</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">fish.miniblog.service, fish.miniblog.dao</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#20351;&#29992;&#22806;&#37096;&#30340; properties &#25991;&#20214; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#25105;&#20204;&#19968;&#33324;&#20250;&#23558;&#32463;&#24120;&#35201;&#25913;&#21160;&#30340;&#19968;&#20123;&#21442;&#25968;&#25552;&#21462;&#20986;&#26469;&#25918;&#21040;&#22806;&#37096; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">context</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">property-placeholder</span> <span class="org-nxml-attribute-local-name">location</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">classpath:db.properties</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#37197;&#32622; Hibernate &#30340; Sessionfactory </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">sessionFactory</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">org.springframework.orm.hibernate5.LocalSessionFactoryBean</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">dataSource</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">com.mchange.v2.c3p0.ComboPooledDataSource</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">destroy-method</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">close</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">user</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">${user}</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">password</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">${password}</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">jdbcUrl</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">${url}</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">driverClass</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">${driver}</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">bean</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">hibernateProperties</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">props</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">prop</span> <span class="org-nxml-attribute-local-name">key</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">hibernate.show_sql</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">true</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">prop</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">prop</span> <span class="org-nxml-attribute-local-name">key</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">hibernate.format_sql</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">true</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">prop</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">prop</span> <span class="org-nxml-attribute-local-name">key</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">hibernate.hbm2ddl.auto</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">update</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">prop</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">prop</span> <span class="org-nxml-attribute-local-name">key</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">hibernate.dialect</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">${dialect}</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">prop</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">props</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">packagesToScan</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">fish.miniblog.model</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">bean</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#37197;&#32622;&#20107;&#21153;&#31649;&#29702;&#22120; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">transactionManager</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">org.springframework.orm.hibernate5.HibernateTransactionManager</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">sessionFactory</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">ref</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">sessionFactory</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">bean</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#24320;&#21551;&#20107;&#21153;&#30456;&#20851;&#30340;&#27880;&#35299; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#28982;&#21518;&#65292;&#23601;&#21487;&#20197;&#22312; Service &#30456;&#20851;&#30340;&#31867;&#25110;&#26041;&#27861;&#19978;&#36890;&#36807; @Transactional &#24320;&#21551;&#20107;&#21153;&#25903;&#25345;&#20102; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">tx</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">annotation-driven</span> <span class="org-nxml-attribute-local-name">proxy-target-class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">true</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+
+<p>
+第五步，建立 Controller，进行测试
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-c-annotation">@Controller</span>
+<span class="org-c-annotation">@RequestMapping</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">"/users"</span><span class="org-rainbow-delimiters-depth-1">)</span>
+<span class="org-keyword">class</span> <span class="org-type">UserController</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+
+    <span class="org-c-annotation">@RequestMapping</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"/{name}"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-keyword">public</span> <span class="org-type">String</span> <span class="org-function-name">show</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-c-annotation">@PathVariable</span> <span class="org-type">String</span> <span class="org-variable-name">name</span>, <span class="org-type">Model</span> <span class="org-variable-name">model</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        model.add<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"name"</span>, name<span class="org-rainbow-delimiters-depth-3">)</span>;
+        <span class="org-keyword">return</span> <span class="org-string">"show"</span>;    <span class="org-comment-delimiter">// </span><span class="org-comment">&#36820;&#22238;&#30340;&#26159; "/WEB-INF/view/show.jsp" &#39029;&#38754;</span>
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Parameters</h3>
+<div class="outline-text-3" id="text-2-2">
+</div><div id="outline-container-sec-2-2-1" class="outline-4">
+<h4 id="sec-2-2-1"><span class="section-number-4">2.2.1</span> 基本类型的自动绑定</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+会根据 handler 参数列表中的字段名字，自动绑定数据
+</p>
+
+<p>
+如果参数没有被赋值，默认会尝试将 null 赋予它。所以对于一些 int 之类的类型，会抛出 IllegalStateException 异常。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-2" class="outline-4">
+<h4 id="sec-2-2-2"><span class="section-number-4">2.2.2</span> 集合类型的自动绑定</h4>
+</div>
+<div id="outline-container-sec-2-2-3" class="outline-4">
+<h4 id="sec-2-2-3"><span class="section-number-4">2.2.3</span> 对象的自动封装</h4>
+<div class="outline-text-4" id="text-2-2-3">
+<div class="org-src-container">
+
+<pre class="src src-html"><span class="org-comment-delimiter">&lt;!-- </span><span class="org-comment">form </span><span class="org-comment-delimiter">--&gt;</span>
+&lt;<span class="org-function-name">form</span> <span class="org-variable-name">action</span>=<span class="org-string">"/greeting"</span>&gt;
+  &lt;<span class="org-function-name">input</span> <span class="org-variable-name">type</span>=<span class="org-string">"text"</span> <span class="org-variable-name">name</span>=<span class="org-string">"name"</span> <span class="org-variable-name">placeholder</span>=<span class="org-string">"&#35831;&#36755;&#20837;&#21517;&#23383;"</span> /&gt;
+  &lt;<span class="org-function-name">input</span> <span class="org-variable-name">type</span>=<span class="org-string">"text"</span> <span class="org-variable-name">name</span>=<span class="org-string">"age"</span> <span class="org-variable-name">placeholder</span>=<span class="org-string">"&#35831;&#36755;&#20837;&#24180;&#40836;"</span> /&gt;
+  &lt;<span class="org-function-name">input</span> <span class="org-variable-name">type</span>=<span class="org-string">"submit"</span>&gt;
+&lt;/<span class="org-function-name">form</span>&gt;
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-comment-delimiter">// </span><span class="org-comment">handler</span>
+<span class="org-c-annotation">@RequestMapping</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">"/greeting"</span><span class="org-rainbow-delimiters-depth-1">)</span>
+<span class="org-keyword">public</span> <span class="org-type">String</span> <span class="org-function-name">greeting</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-type">User</span> <span class="org-variable-name">user</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-keyword">return</span> <span class="org-string">"greeting"</span>;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+
+<span class="org-comment-delimiter">// </span><span class="org-comment">model</span>
+<span class="org-type">Class</span> <span class="org-variable-name">User</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-keyword">private</span> <span class="org-type">String</span> <span class="org-variable-name">name</span>;
+    <span class="org-keyword">private</span> <span class="org-type">int</span> <span class="org-variable-name">age</span>;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-4" class="outline-4">
+<h4 id="sec-2-2-4"><span class="section-number-4">2.2.4</span> HttpSession/HttpServletRequest 等的自动绑定</h4>
+<div class="outline-text-4" id="text-2-2-4">
+<pre class="example">
+public String greeting(HttpServletRequest r, HttpSession s)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-5" class="outline-4">
+<h4 id="sec-2-2-5"><span class="section-number-4">2.2.5</span> @RequestParam</h4>
+<div class="outline-text-4" id="text-2-2-5">
+<p>
+定制入参的名字和默认值等
+</p>
+<pre class="example">
+public String greeting(@RequestParam(name = "username", defaultValue = "xyz") String name)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-6" class="outline-4">
+<h4 id="sec-2-2-6"><span class="section-number-4">2.2.6</span> @RequestAttribute</h4>
+<div class="outline-text-4" id="text-2-2-6">
+<p>
+将 request 的某个 Attribute 值，赋予 handler 参数
+</p>
+<pre class="example">
+public String greeting(@RequestAttribute(name = "name") String name)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-7" class="outline-4">
+<h4 id="sec-2-2-7"><span class="section-number-4">2.2.7</span> @CookieValue</h4>
+<div class="outline-text-4" id="text-2-2-7">
+<p>
+用来绑定 cookie 中的值
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-8" class="outline-4">
+<h4 id="sec-2-2-8"><span class="section-number-4">2.2.8</span> @RequestHeader</h4>
+<div class="outline-text-4" id="text-2-2-8">
+<p>
+绑定 http 请求头部的信息到参数中
+</p>
+<pre class="example">
+public String greeting(@RequestHeader(name = "user-agent") String ua)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-9" class="outline-4">
+<h4 id="sec-2-2-9"><span class="section-number-4">2.2.9</span> @PathVariable</h4>
+<div class="outline-text-4" id="text-2-2-9">
+<p>
+绑定 url 中匹配的串到参数中，用 {} 匹配
+</p>
+<pre class="example">
+@RequestMapping("/greeting/{id}")
+public String greeting(@PathVariable int id)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-10" class="outline-4">
+<h4 id="sec-2-2-10"><span class="section-number-4">2.2.10</span> @RequestBody</h4>
+<div class="outline-text-4" id="text-2-2-10">
+<p>
+将 http 请求 body 里的数据自动转换并绑定到参数。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-11" class="outline-4">
+<h4 id="sec-2-2-11"><span class="section-number-4">2.2.11</span> @ResponseBody</h4>
+<div class="outline-text-4" id="text-2-2-11">
+<p>
+忽略头部，直接将内容作为响应体返回。
+</p>
+
+<p>
+示例：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-js">$<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">"#showmsg"</span><span class="org-rainbow-delimiters-depth-1">)</span>.click<span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">function</span> <span class="org-rainbow-delimiters-depth-2">()</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+    d = <span class="org-rainbow-delimiters-depth-3">{</span><span class="org-string">"name"</span>: <span class="org-string">"xiaohui"</span>, <span class="org-string">"age"</span>: 9<span class="org-rainbow-delimiters-depth-3">}</span>;
+    $.ajax<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-rainbow-delimiters-depth-4">{</span>
+        method: <span class="org-string">'post'</span>,
+        url: <span class="org-string">'/greeting'</span>,
+        data: JSON.stringify<span class="org-rainbow-delimiters-depth-5">(</span>d<span class="org-rainbow-delimiters-depth-5">)</span>,
+        contentType: <span class="org-string">'application/json'</span>,
+        <span class="org-function-name">success</span>: <span class="org-keyword">function</span> <span class="org-rainbow-delimiters-depth-5">(</span><span class="org-variable-name">o</span><span class="org-rainbow-delimiters-depth-5">)</span> <span class="org-rainbow-delimiters-depth-5">{</span>
+            console.log<span class="org-rainbow-delimiters-depth-6">(</span>o<span class="org-rainbow-delimiters-depth-6">)</span>;  <span class="org-comment-delimiter">// </span><span class="org-comment">&#24471;&#21040;&#30340;&#26159; json &#23545;&#35937;</span>
+            alert<span class="org-rainbow-delimiters-depth-6">(</span>eee.age<span class="org-rainbow-delimiters-depth-6">)</span>;
+            alert<span class="org-rainbow-delimiters-depth-6">(</span>eee.name<span class="org-rainbow-delimiters-depth-6">)</span>;
+        <span class="org-rainbow-delimiters-depth-5">}</span>
+    <span class="org-rainbow-delimiters-depth-4">}</span><span class="org-rainbow-delimiters-depth-3">)</span>;
+<span class="org-rainbow-delimiters-depth-2">}</span><span class="org-rainbow-delimiters-depth-1">)</span>;
+</pre>
+</div>
+
+<p>
+UserController:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-c-annotation">@RequestMapping</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">"/greeting"</span><span class="org-rainbow-delimiters-depth-1">)</span>
+<span class="org-c-annotation">@ResponseBody</span>
+<span class="org-keyword">public</span> <span class="org-type">User</span> <span class="org-function-name">greeting</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-c-annotation">@RequestBody</span> <span class="org-type">User</span> <span class="org-variable-name">user</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    System.out.println<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"&#21448;&#36807;&#20102;&#19968;&#20010;&#26032;&#24180;&#65281;"</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+    <span class="org-type">int</span> <span class="org-variable-name">age</span> = user.getAge<span class="org-rainbow-delimiters-depth-2">()</span>;
+    user.setAge<span class="org-rainbow-delimiters-depth-2">(</span>age + 1<span class="org-rainbow-delimiters-depth-2">)</span>;
+    <span class="org-keyword">return</span> user;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-12" class="outline-4">
+<h4 id="sec-2-2-12"><span class="section-number-4">2.2.12</span> @SessionAttribute</h4>
+</div>
+<div id="outline-container-sec-2-2-13" class="outline-4">
+<h4 id="sec-2-2-13"><span class="section-number-4">2.2.13</span> @ModelAttribute</h4>
+</div>
+<div id="outline-container-sec-2-2-14" class="outline-4">
+<h4 id="sec-2-2-14"><span class="section-number-4">2.2.14</span> Errors/BindingResult</h4>
+<div class="outline-text-4" id="text-2-2-14">
+<p>
+用来绑定出错的信息
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-15" class="outline-4">
+<h4 id="sec-2-2-15"><span class="section-number-4">2.2.15</span> Model/View/ModelAndView</h4>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> 请求流程</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+当请求被 DispatcherServlet 拦截，会在 doService 里面完成所有的处理逻辑。
+</p>
+
+<p>
+处理的大致流程是这样的：
+</p>
+<ol class="org-ol">
+<li>预处理
+</li>
+<li>根据请求的 URL 通过 HandlerMapping 获取匹配的 Controller 和 handler
+</li>
+<li>创建 ModelAndView 对象，这个对象将会保存所有的模型数据，还会持有页面展现相关的信息
+<pre class="example">
+ModelAndView mv = null
+</pre>
+</li>
+<li>调用相应的 handler 方法，将结果封装成 ModelAndView 赋值给 mv。
+</li>
+<li>调用 render 方法，将 Model 里的数据渲染到 View 视图里
+</li>
+<li>清理工作
+</li>
+</ol>
+
+<p>
+所以我们需要明白，我们的 handler 最终产生的应该是一个保存了数据和视图的 ModelAndView。
+即使我们的 handler 返回类型是字符串或其他，到最后还是被封装成了 ModelAndView。
+</p>
+
+<p>
+而且在封装 ModelAndView 时，会将 handler 参数列表上的数据自动添加到里面。
+</p>
+
+<p>
+我们可以在 jsp 里，对 ModelAndView 里的所有数据通过 el 表达式或 spring 标签进行获取。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> Validation(表单验证)</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+三种方法：
+</p>
+</div>
+<div id="outline-container-sec-2-4-1" class="outline-4">
+<h4 id="sec-2-4-1"><span class="section-number-4">2.4.1</span> 最基本的校验</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<p>
+几个重要的概念
+</p>
+<ul class="org-ul">
+<li>一个接口 Errors/BindingResult，用来保存绑定错误信息。
+</li>
+<li>两个方法 errors.reject() / errors.rejectValue()，用来注册全局/字段级别的错误信息
+</li>
+<li>一个标签 &lt;form:errors path="*" /&gt;
+</li>
+</ul>
+
+<p>
+例子，首先，在页面上：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-html">&lt;<span class="org-sgml-namespace">form</span>:<span class="org-function-name">form</span> <span class="org-variable-name">action</span>=<span class="org-string">"/users/create"</span> <span class="org-variable-name">modelAttribute</span>=<span class="org-string">"user"</span>&gt;
+  &lt;<span class="org-function-name">ul</span> <span class="org-variable-name">class</span>=<span class="org-string">"errorTip"</span>&gt;
+    &lt;<span class="org-sgml-namespace">form</span>:<span class="org-function-name">errors</span> <span class="org-variable-name">path</span>=<span class="org-string">"*"</span> <span class="org-variable-name">cssClass</span>=<span class="org-string">"error"</span> <span class="org-variable-name">element</span>=<span class="org-string">"li"</span> /&gt;
+  &lt;/<span class="org-function-name">ul</span>&gt;
+  &lt;<span class="org-function-name">div</span>&gt;
+    &lt;<span class="org-sgml-namespace">form</span>:<span class="org-function-name">input</span> <span class="org-variable-name">path</span>=<span class="org-string">"name"</span> /&gt;
+    &lt;<span class="org-sgml-namespace">form</span>:<span class="org-function-name">errors</span> <span class="org-variable-name">path</span>=<span class="org-string">"name"</span> <span class="org-variable-name">cssClass</span>=<span class="org-string">"error"</span> <span class="org-variable-name">element</span>=<span class="org-string">"div"</span> /&gt;
+  &lt;/<span class="org-function-name">div</span>&gt;
+  &lt;<span class="org-function-name">div</span>&gt;
+    &lt;<span class="org-sgml-namespace">form</span>:<span class="org-function-name">input</span> <span class="org-variable-name">type</span>=<span class="org-string">"number"</span> <span class="org-variable-name">path</span>=<span class="org-string">"age"</span> /&gt;
+    &lt;<span class="org-sgml-namespace">form</span>:<span class="org-function-name">errors</span> <span class="org-variable-name">path</span>=<span class="org-string">"age"</span> <span class="org-variable-name">cssClass</span>=<span class="org-string">"error"</span> <span class="org-variable-name">element</span>=<span class="org-string">"p"</span> /&gt;
+  &lt;/<span class="org-function-name">div</span>&gt;
+  &lt;<span class="org-function-name">input</span> <span class="org-variable-name">type</span>=<span class="org-string">"submit"</span> <span class="org-variable-name">value</span>=<span class="org-string">"&#27880;&#20876;"</span> /&gt;
+&lt;/<span class="org-sgml-namespace">form</span>:<span class="org-function-name">form</span>&gt;
+</pre>
+</div>
+
+<p>
+然后，可以在 Controller 中的 handler 里进行校验，添加错误信息
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-c-annotation">@Controller</span>
+<span class="org-c-annotation">@RequestMapping</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">"/users"</span><span class="org-rainbow-delimiters-depth-1">)</span>
+<span class="org-keyword">class</span> <span class="org-type">UserController</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+
+    <span class="org-c-annotation">@RequestMapping</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"/create"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-keyword">public</span> <span class="org-type">String</span> <span class="org-function-name">create</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">User</span> <span class="org-variable-name">user</span>, <span class="org-type">Errors</span> <span class="org-variable-name">errors</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+
+        <span class="org-comment-delimiter">// </span><span class="org-comment">&#26657;&#39564;&#21517;&#23383;</span>
+        <span class="org-keyword">if</span><span class="org-rainbow-delimiters-depth-3">(</span>user.getName<span class="org-rainbow-delimiters-depth-4">()</span> == <span class="org-constant">null</span> || empty<span class="org-rainbow-delimiters-depth-4">(</span>user.getName<span class="org-rainbow-delimiters-depth-5">()</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">{</span>
+            errors.rejectValue<span class="org-rainbow-delimiters-depth-4">(</span><span class="org-string">"name"</span>, <span class="org-constant">null</span>, <span class="org-string">"&#21517;&#23383;&#19981;&#33021;&#20026;&#31354;"</span><span class="org-rainbow-delimiters-depth-4">)</span>;
+        <span class="org-rainbow-delimiters-depth-3">}</span>
+
+        <span class="org-comment-delimiter">// </span><span class="org-comment">&#26657;&#39564;&#24180;&#40836;</span>
+        <span class="org-keyword">if</span><span class="org-rainbow-delimiters-depth-3">(</span>user.getAge<span class="org-rainbow-delimiters-depth-4">()</span> &lt; 18<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">{</span>
+            errors.rejectValue<span class="org-rainbow-delimiters-depth-4">(</span><span class="org-string">"age"</span>, <span class="org-constant">null</span>, <span class="org-string">"&#24180;&#40836;&#22826;&#23567;&#20102;&#65292;18R"</span><span class="org-rainbow-delimiters-depth-4">)</span>;
+        <span class="org-rainbow-delimiters-depth-3">}</span>
+
+        <span class="org-comment-delimiter">// </span><span class="org-comment">&#20840;&#23616;&#26816;&#39564;&#30340;&#20363;&#23376;</span>
+        <span class="org-keyword">if</span><span class="org-rainbow-delimiters-depth-3">(</span>user.getName<span class="org-rainbow-delimiters-depth-4">()</span>.equals<span class="org-rainbow-delimiters-depth-4">(</span><span class="org-string">"admin"</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">{</span>
+            errors.reject<span class="org-rainbow-delimiters-depth-4">(</span><span class="org-constant">null</span>, <span class="org-string">"&#20320;&#26159;&#35841;&#65311;"</span><span class="org-rainbow-delimiters-depth-4">)</span>;
+        <span class="org-rainbow-delimiters-depth-3">}</span>
+
+
+        <span class="org-comment-delimiter">// </span><span class="org-comment">&#22914;&#26524;&#26377;&#26657;&#39564;&#38169;&#35823;&#65292;&#36820;&#22238;&#30456;&#24212;&#38169;&#35823;&#39029;&#38754;</span>
+        <span class="org-keyword">if</span><span class="org-rainbow-delimiters-depth-3">(</span>errors.hasErrors<span class="org-rainbow-delimiters-depth-4">()</span><span class="org-rainbow-delimiters-depth-3">)</span>
+            <span class="org-keyword">return</span> <span class="org-string">"regist"</span>;
+
+        <span class="org-comment-delimiter">// </span><span class="org-comment">&#22914;&#26524;&#27809;&#26377;&#38169;&#35823;&#65292;&#36820;&#22238;&#30340;&#39029;&#38754;</span>
+        <span class="org-keyword">return</span> <span class="org-string">"greeting"</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+<p>
+这样，就可以了。这种方法是基于 handler 的，优点是定义方便，缺点是不便于复用。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-4-2" class="outline-4">
+<h4 id="sec-2-4-2"><span class="section-number-4">2.4.2</span> 自定义验证器</h4>
+<div class="outline-text-4" id="text-2-4-2">
+<p>
+首先，自定义我们的验证器，只需要实现 Validator 接口即可。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">UserValidator</span> <span class="org-keyword">implements</span> <span class="org-type">Validator</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#35201;&#26469;&#26657;&#39564;&#39564;&#35777;&#30340;&#31867;</span>
+    <span class="org-c-annotation">@Override</span>
+    <span class="org-keyword">public</span> <span class="org-type">boolean</span> <span class="org-function-name">supports</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">Class</span><span class="org-rainbow-delimiters-depth-3">&lt;</span>?<span class="org-rainbow-delimiters-depth-3">&gt;</span> <span class="org-variable-name">clazz</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-keyword">return</span> clazz.equals<span class="org-rainbow-delimiters-depth-3">(</span>User.<span class="org-keyword">class</span><span class="org-rainbow-delimiters-depth-3">)</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#20889;&#25105;&#20204;&#30340;&#26657;&#39564;&#36923;&#36753;&#65292;&#25226;&#30456;&#20851;&#38169;&#35823;&#27880;&#20876;&#21040; errors &#37324;&#38754;</span>
+    <span class="org-c-annotation">@Override</span>
+    <span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">validate</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">Object</span> <span class="org-variable-name">target</span>, <span class="org-type">Errors</span> <span class="org-variable-name">errors</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-type">User</span> <span class="org-variable-name">user</span> = <span class="org-rainbow-delimiters-depth-3">(</span><span class="org-type">User</span><span class="org-rainbow-delimiters-depth-3">)</span> target;
+        <span class="org-keyword">if</span><span class="org-rainbow-delimiters-depth-3">(</span>user.getName<span class="org-rainbow-delimiters-depth-4">()</span> == <span class="org-constant">null</span> || user.getName<span class="org-rainbow-delimiters-depth-4">()</span>.length<span class="org-rainbow-delimiters-depth-4">()</span> &lt; 3<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">{</span>
+            errors.rejectValue<span class="org-rainbow-delimiters-depth-4">(</span><span class="org-string">"name"</span>, <span class="org-constant">null</span>, <span class="org-string">"&#21517;&#23383;&#19981;&#33021;&#20026;&#31354;&#65292;&#32780;&#19988;&#24517;&#39035;&#35201;&#22823;&#20110; 3 &#20301;"</span><span class="org-rainbow-delimiters-depth-4">)</span>;
+        <span class="org-rainbow-delimiters-depth-3">}</span>
+
+        <span class="org-keyword">if</span><span class="org-rainbow-delimiters-depth-3">(</span>user.getAge<span class="org-rainbow-delimiters-depth-4">()</span> &lt; 18 <span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">{</span>
+            errors.rejectValue<span class="org-rainbow-delimiters-depth-4">(</span><span class="org-string">"age"</span>, <span class="org-constant">null</span>, <span class="org-string">"&#24180;&#40836;&#24517;&#39035;&#35201;&#22823;&#20110; 18 &#23681;&#21734;"</span><span class="org-rainbow-delimiters-depth-4">)</span>;
+        <span class="org-rainbow-delimiters-depth-3">}</span>
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+<p>
+其次，需要注册我们的验证器。
+</p>
+
+<p>
+可以注册到当前的 Controller 里面，
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-comment-delimiter">// </span><span class="org-comment">&#25918;&#21040; Controller &#37324;&#38754;&#65292;&#36825;&#26679;&#20250;&#22312; handler &#25191;&#34892;&#20043;&#21069;&#34987;&#25191;&#34892;</span>
+<span class="org-c-annotation">@InitBinder</span>
+<span class="org-keyword">protected</span> <span class="org-type">void</span> <span class="org-function-name">init</span> <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-type">DataBinder</span> <span class="org-variable-name">binder</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    binder.setValidator<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">new</span> <span class="org-type">UserValidator</span><span class="org-rainbow-delimiters-depth-3">()</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+<p>
+也可以在 spring-mvc.xml 配置里注册成全局的验证器。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">mvc</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">annotation-driven</span> <span class="org-nxml-attribute-local-name">validator</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">userValidator</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">userValidator</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">fish.miniblog.validator.UserValidator</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+
+<p>
+最后，就可以在所需要验证的参数前面加上 @Validated 注解，来实现参数的自动校验了。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-4-3" class="outline-4">
+<h4 id="sec-2-4-3"><span class="section-number-4">2.4.3</span> JSR-303 风格校验</h4>
+<div class="outline-text-4" id="text-2-4-3">
+<p>
+JSR-303 是 java 官方推出的一套 Validation 接口。
+</p>
+
+<p>
+hibernate 给出了一个完整实现。
+</p>
+
+<p>
+首先，如果想使用 JSR-303 的校验风格，需要引入相应的包：
+</p>
+<pre class="example">
+complie "org.hibernate:hibernate-validator:5.4.0.Final"
+</pre>
+
+<p>
+其次，添加我们的验证逻辑。需要在我们的 model bean 上添加相关注解：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">User</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-c-annotation">@NotNull</span>
+    <span class="org-c-annotation">@Size</span><span class="org-rainbow-delimiters-depth-2">(</span>min = 3, max = 10<span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-keyword">private</span> <span class="org-type">String</span> <span class="org-variable-name">name</span>;
+
+    <span class="org-c-annotation">@Range</span><span class="org-rainbow-delimiters-depth-2">(</span>min = 10, max = 100<span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-keyword">private</span> <span class="org-type">int</span> <span class="org-variable-name">age</span>;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+<p>
+再次，要保证在我们的 spring-mvc.xml 中存在:
+</p>
+<pre class="example">
+&lt;mvc:annotation-driven /&gt;
+</pre>
+
+<p>
+最后，使用，只要在 Controller 的相关字段上添加 @Valid 注解即可。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-type">String</span> <span class="org-function-name">create</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-c-annotation">@Valid</span> <span class="org-type">User</span> <span class="org-variable-name">user</span>, <span class="org-type">Errors</span> <span class="org-variable-name">errors</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-comment-delimiter">// </span><span class="org-comment">&#20854;&#20182;&#30340;&#20351;&#29992;&#36319;&#19978;&#38754;&#26159;&#19968;&#33268;&#30340;.</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-5" class="outline-3">
+<h3 id="sec-2-5"><span class="section-number-3">2.5</span> PropertyEditor/Convertor/Formater(日期转换为例)</h3>
+<div class="outline-text-3" id="text-2-5">
+</div><div id="outline-container-sec-2-5-1" class="outline-4">
+<h4 id="sec-2-5-1"><span class="section-number-4">2.5.1</span> 第一种方法：利用内置的 CustomDateEditor</h4>
+<div class="outline-text-4" id="text-2-5-1">
+<p>
+首先，在我们的 Controller 的 InitBinder 里面，注册 CustomEditor
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-c-annotation">@InitBinder</span>
+<span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">init</span> <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-type">WebDataBinder</span> <span class="org-variable-name">binder</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-type">CustomDateEditor</span> <span class="org-variable-name">dateEditor</span> = <span class="org-keyword">new</span> <span class="org-type">CustomDateEditor</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-keyword">new</span> <span class="org-type">SimpleDateFormat</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"yyyy-MM-dd"</span><span class="org-rainbow-delimiters-depth-3">)</span>, <span class="org-constant">true</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+    binder.registerCustomEditor<span class="org-rainbow-delimiters-depth-2">(</span>Date.<span class="org-keyword">class</span>, dateEditor<span class="org-rainbow-delimiters-depth-2">)</span>;                                <span class="org-rainbow-delimiters-mismatched">)</span>;
+<span class="org-rainbow-delimiters-unmatched">}</span>
+</pre>
+</div>
+
+<p>
+然后，就可以正常转换了。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-5-2" class="outline-4">
+<h4 id="sec-2-5-2"><span class="section-number-4">2.5.2</span> 第二种方法：实现自定义转换器</h4>
+<div class="outline-text-4" id="text-2-5-2">
+<p>
+spring 3.0 之后，使用 converter
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">MyDateConverter</span> <span class="org-keyword">implements</span> <span class="org-type">Converter</span><span class="org-rainbow-delimiters-depth-1">&lt;</span><span class="org-type">String</span>, <span class="org-type">Date</span><span class="org-rainbow-delimiters-depth-1">&gt;</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-keyword">public</span> <span class="org-type">Date</span> <span class="org-function-name">convert</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">String</span> <span class="org-variable-name">datestr</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-comment-delimiter">// </span><span class="org-comment">&#33258;&#24049;&#21435;&#23454;&#29616;&#65292;&#23558;&#23383;&#31526;&#20018;&#36716;&#25442;&#20026; Date &#23545;&#35937;&#12290;</span>
+        <span class="org-comment-delimiter">// </span><span class="org-comment">&#27880;&#24847;&#32771;&#34385;&#24322;&#24120;&#22788;&#29702;&#31561;</span>
+        <span class="org-keyword">return</span> <span class="org-constant">null</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+<p>
+然后需要在配置文件中注册转换器
+</p>
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#37197;&#32622;&#25105;&#20204;&#23450;&#20041;&#30340;&#36716;&#25442;&#26381;&#21153; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">mvc</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">annotation-driven</span> <span class="org-nxml-attribute-local-name">conversion-service</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">myConversionService</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#23450;&#20041;&#20840;&#23616;&#30340;&#36716;&#25442;&#26381;&#21153;&#65292;&#21487;&#20197;&#37197;&#32622;&#22810;&#20010;&#36716;&#25442;&#22120; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#22312;&#36825;&#37324;&#65292;&#21482;&#37197;&#32622;&#20102;&#25105;&#20204;&#33258;&#23450;&#20041;&#30340;&#36716;&#25442;&#22120;&#65292;DateConverter </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">myConversionService</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">org.springframework.context.support.ConversionServiceFactoryBean</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">converters</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">set</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">fish.miniblog.converter.MyDateConverter</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">set</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">bean</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+
+<p>
+这样就可以了。所有的 yyyy-MM-yy 之类的字符串就可以正常转换成 Date 对象了。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-5-3" class="outline-4">
+<h4 id="sec-2-5-3"><span class="section-number-4">2.5.3</span> 第三种方法：使用 @DateTimeFormat 注解</h4>
+<div class="outline-text-4" id="text-2-5-3">
+<p>
+在 model 上，增加相应注解：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-keyword">class</span> <span class="org-type">User</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+  <span class="org-c-annotation">@DateTimeFormat</span><span class="org-rainbow-delimiters-depth-2">(</span>pattern = <span class="org-string">"yyyy-MM-dd"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+  <span class="org-keyword">private</span> <span class="org-type">Date</span> <span class="org-variable-name">birthday</span>;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+<p>
+就可以了。
+</p>
+
+<p>
+另外，如果想让返回的 JSON 对象中能够准确处理时间类型，需要用到 @JsonFormat 注解
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-5-4" class="outline-4">
+<h4 id="sec-2-5-4"><span class="section-number-4">2.5.4</span> 日期在页面上的显示</h4>
+<div class="outline-text-4" id="text-2-5-4">
+<p>
+暂缺。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-6" class="outline-3">
+<h3 id="sec-2-6"><span class="section-number-3">2.6</span> Exception(异常处理)</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+SpringMVC 中默认的异常处理器是 DefaultHandlerExceptionResolver，
+但它只是简单粗暴地将异常栈在页面上进行显示。
+在实际项目中这种处理是不合适的。
+所以，我们需要自己定制我们自己的异常处理方式。
+</p>
+
+<p>
+自定义异常，主要有下面两种方法：
+</p>
+</div>
+<div id="outline-container-sec-2-6-1" class="outline-4">
+<h4 id="sec-2-6-1"><span class="section-number-4">2.6.1</span> HandlerExceptionResolver</h4>
+<div class="outline-text-4" id="text-2-6-1">
+<p>
+这是 SpringMVC 中所有异常处理器的总接口。
+要实现自己的异常处理，就是要继承这个接口，实现自己的处理器：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">MyExceptionResolver</span> <span class="org-keyword">implements</span> <span class="org-type">HandlerExceptionResolver</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-c-annotation">@Override</span>
+    <span class="org-keyword">public</span> <span class="org-type">ModelAndView</span> <span class="org-function-name">resolveException</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">HttpServletRequest</span> <span class="org-variable-name">request</span>, <span class="org-type">HttpServletResponse</span> <span class="org-variable-name">response</span>, <span class="org-type">Object</span> <span class="org-variable-name">handler</span>, <span class="org-type">Exception</span> <span class="org-variable-name">ex</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+
+        <span class="org-type">ModelAndView</span> <span class="org-variable-name">mv</span> = <span class="org-keyword">new</span> <span class="org-type">ModelAndView</span><span class="org-rainbow-delimiters-depth-3">()</span>;
+
+        <span class="org-keyword">if</span><span class="org-rainbow-delimiters-depth-3">(</span>ex <span class="org-keyword">instanceof</span> MyException<span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-rainbow-delimiters-depth-3">{</span>
+            mv.addObject<span class="org-rainbow-delimiters-depth-4">(</span><span class="org-string">"err"</span>, ex<span class="org-rainbow-delimiters-depth-4">)</span>;
+            mv.setModelName<span class="org-rainbow-delimiters-depth-4">(</span><span class="org-string">"error"</span><span class="org-rainbow-delimiters-depth-4">)</span>;
+        <span class="org-rainbow-delimiters-depth-3">}</span> <span class="org-keyword">else</span> <span class="org-rainbow-delimiters-depth-3">{</span>
+            <span class="org-comment-delimiter">// </span><span class="org-comment">... &#20854;&#20182;&#21508;&#31181;&#24773;&#20917;</span>
+        <span class="org-rainbow-delimiters-depth-3">}</span>
+
+        <span class="org-keyword">return</span> mv;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+<p>
+然后，在 springmvc.xml 中注册为 bean 即可。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">fish.miniblog.MyExceptionResolver</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+
+
+<p>
+当然，如果每次异常处理都需要自己定义 ExceptionResovler，很麻烦。
+所以，spring 给我们提供了一个简单的默认实现，SimpleMappingExceptionResolver。
+如果需要，只需要在 springmvc.xml 中注册即可：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">org.springframework.web.servlet.handler.SimpleMappingExceptionResolver</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#22914;&#26524;&#26377;&#24322;&#24120;&#65292;&#26368;&#21518;&#30001; error.jsp &#39029;&#38754;&#26469;&#26174;&#31034;&#38169;&#35823;&#20449;&#24687;  </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">defaultErrorView</span><span class="org-nxml-attribute-value-delimiter">"</span>   <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">error</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#22312; error.jsp &#20013;&#65292;&#20351;&#29992; ${err} &#26469;&#33719;&#21462;&#24322;&#24120;&#20449;&#24687; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">exceptionAttribute</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">err</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">exceptionMappings</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#26242;&#32570; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">bean</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-2-6-2" class="outline-4">
+<h4 id="sec-2-6-2"><span class="section-number-4">2.6.2</span> @ExceptionHandler 注解</h4>
+<div class="outline-text-4" id="text-2-6-2">
+<p>
+可以定义一个类似于普通 handler 的方法，添加 @ExceptionHandler 将其作为一个异常处理方法
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-c-annotation">@Controller</span>
+<span class="org-c-annotation">@ControllerAdvice</span>
+<span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">ExceptionController</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+
+    <span class="org-c-annotation">@ExceptionHandler</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-rainbow-delimiters-depth-3">{</span>YourException.<span class="org-keyword">class</span><span class="org-rainbow-delimiters-depth-3">}</span><span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-keyword">public</span> <span class="org-type">ModelAndView</span> <span class="org-function-name">hahaha</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">Exception</span> <span class="org-variable-name">e</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-type">ModelAndView</span> <span class="org-variable-name">mv</span> = <span class="org-keyword">new</span> <span class="org-type">ModelAndView</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"error"</span><span class="org-rainbow-delimiters-depth-3">)</span>;
+        mv.addObject<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"err"</span>, e<span class="org-rainbow-delimiters-depth-3">)</span>;
+        <span class="org-keyword">return</span> mv;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+
+    <span class="org-c-annotation">@ExceptionHandler</span>
+    <span class="org-keyword">public</span> <span class="org-type">String</span> <span class="org-function-name">hahaha</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">MyException</span> <span class="org-variable-name">e</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-keyword">return</span> <span class="org-string">"index"</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+<p>
+默认只是 Controller 范围内有效的。
+</p>
+
+<p>
+Spring 3 之后增加了一个 @ControllerAdvice 注解，作用在控制器上。
+它会将其中所有的 @ExceptionHandler、@InitBinder、@ModelAttribute 等全局化。
+</p>
+
+<p>
+所以，一般情况下，我们可以将所有 @ExceptionHandler 方法统一放置在一个加了 @ControllerAdvice 的控制器里，实现全局异常。
+</p>
+
+<p>
+就酱紫，没什么好说的。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-7" class="outline-3">
+<h3 id="sec-2-7"><span class="section-number-3">2.7</span> Interceptor(拦截器)</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+拦截器主要用来增强 handler 方法
+</p>
+
+<p>
+拦截器的接口有两个，定义拦截器就是实现他们之一
+</p>
+<ul class="org-ul">
+<li>HandlerInterceptor      参数比较多，能够更全面控制拦截行为
+</li>
+<li>WebRequestInterceptor   针对 Web 请求精简了参数列表，主要用来控制 request/ModelAndView/Exception
+</li>
+</ul>
+
+<p>
+主要实现以下三个方法:
+</p>
+<ul class="org-ul">
+<li>preHandler()       在执行 Controller 相应 handler 之前要执行
+</li>
+<li>postHandler()      执行完 handler，进入 render 页面渲染前的阶段执行
+</li>
+<li>afterCompletion()  所有的东西都做完，退出前执行。主要用来做一些清理工作
+</li>
+</ul>
+
+<p>
+下面是例子:
+</p>
+
+<p>
+<b>定义</b>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-comment-delimiter">// </span><span class="org-comment">&#23454;&#29616; HandlerInterceptor &#25509;&#21475;&#30340;&#24418;&#24335;</span>
+<span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">MyInterceptor</span> <span class="org-keyword">implements</span> <span class="org-type">HandlerInterceptor</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-c-annotation">@Override</span>
+    <span class="org-keyword">public</span> <span class="org-type">boolean</span> <span class="org-function-name">preHandle</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">HttpServletRequest</span> <span class="org-variable-name">request</span>, <span class="org-type">HttpServletResponse</span> <span class="org-variable-name">response</span>, <span class="org-type">Object</span> <span class="org-variable-name">handler</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-keyword">throws</span> <span class="org-type">Exception</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-comment-delimiter">// </span><span class="org-comment">&#22312;&#35843;&#29992; handler &#20043;&#21069;&#34987;&#35843;&#29992;</span>
+        <span class="org-comment-delimiter">// </span><span class="org-comment">&#22914;&#26524;&#36820;&#22238; true&#65292;&#32487;&#32493;&#19979;&#38754;&#30340;&#27969;&#31243;&#65292;&#22914;&#26524;&#36820;&#22238; false&#65292;&#30452;&#25509;&#36339;&#36716;&#21040; afterComplete &#20013;&#27490;&#36816;&#34892;&#12290;</span>
+        <span class="org-keyword">return</span> <span class="org-constant">true</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+
+    <span class="org-c-annotation">@Override</span>
+    <span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">postHandle</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">HttpServletRequest</span> <span class="org-variable-name">request</span>, <span class="org-type">HttpServletResponse</span> <span class="org-variable-name">response</span>, <span class="org-type">Object</span> <span class="org-variable-name">handler</span>, <span class="org-type">ModelAndView</span> <span class="org-variable-name">modelAndView</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-keyword">throws</span> <span class="org-type">Exception</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-comment-delimiter">// </span><span class="org-comment">&#22312;&#35843;&#29992;&#23436; handler &#24471;&#21040;&#23553;&#35013;&#22909;&#30340; ModelAndView &#20043;&#21518;&#65292;&#28210;&#26579;&#39029;&#38754;&#21069;&#34987;&#35843;&#29992;</span>
+        <span class="org-comment-delimiter">// </span><span class="org-comment">&#22312;&#36825;&#37324;&#65292;&#21487;&#20197;&#23545; ModelAndView &#37324;&#30340;&#25968;&#25454;&#20316;&#20986;&#33258;&#24049;&#30340;&#20462;&#25913;&#31561;</span>
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+
+    <span class="org-c-annotation">@Override</span>
+    <span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">afterCompletion</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">HttpServletRequest</span> <span class="org-variable-name">request</span>, <span class="org-type">HttpServletResponse</span> <span class="org-variable-name">response</span>, <span class="org-type">Object</span> <span class="org-variable-name">handler</span>, <span class="org-type">Exception</span> <span class="org-variable-name">ex</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-keyword">throws</span> <span class="org-type">Exception</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-comment-delimiter">// </span><span class="org-comment">&#22312;&#26368;&#21518;&#30340;&#28165;&#29702;&#38454;&#27573;&#34987;&#35843;&#29992;</span>
+        <span class="org-comment-delimiter">// </span><span class="org-comment">&#22312;&#36825;&#37324;&#65292;&#36827;&#34892;&#21892;&#21518;&#25805;&#20316;&#12290;</span>
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+
+
+<span class="org-comment-delimiter">// </span><span class="org-comment">&#23454;&#29616; WebRequestInterceptor &#25509;&#21475;&#30340;&#24418;&#24335;</span>
+<span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">HisInterceptor</span> <span class="org-keyword">implements</span> <span class="org-type">WebRequestInterceptor</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-c-annotation">@Override</span>
+    <span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">preHandle</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">WebRequest</span> <span class="org-variable-name">request</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-keyword">throws</span> <span class="org-type">Exception</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        System.out.println<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"pre"</span><span class="org-rainbow-delimiters-depth-3">)</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+
+    <span class="org-c-annotation">@Override</span>
+    <span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">postHandle</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">WebRequest</span> <span class="org-variable-name">request</span>, <span class="org-type">ModelMap</span> <span class="org-variable-name">model</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-keyword">throws</span> <span class="org-type">Exception</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        System.out.println<span class="org-rainbow-delimiters-depth-3">(</span>model<span class="org-rainbow-delimiters-depth-3">)</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+
+    <span class="org-c-annotation">@Override</span>
+    <span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">afterCompletion</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">WebRequest</span> <span class="org-variable-name">request</span>, <span class="org-type">Exception</span> <span class="org-variable-name">ex</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-keyword">throws</span> <span class="org-type">Exception</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        System.out.println<span class="org-rainbow-delimiters-depth-3">(</span>ex<span class="org-rainbow-delimiters-depth-3">)</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+<p>
+<b>注册</b>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">mvc</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">interceptors</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#20840;&#23616;&#25318;&#25130;&#22120; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">fish.miniblog.interceptor.YourInterceptor</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">fish.miniblog.interceptor.MyInterceptor</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+  <span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#20316;&#29992;&#20110;&#25351;&#23450;&#26144;&#23556;&#30340;&#25318;&#25130;&#22120; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">mvc</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">interceptor</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#20026;&#25152;&#26377; /users/** &#35831;&#27714;&#37197;&#32622;&#25318;&#25130;&#22120; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-prefix">mvc</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">mapping</span> <span class="org-nxml-attribute-local-name">path</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">/users/**</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">fish.miniblog.interceptor.HisInterceptor</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-prefix">mvc</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">interceptor</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-prefix">mvc</span><span class="org-nxml-element-colon">:</span><span class="org-nxml-element-local-name">interceptors</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+
+<p>
+然后，就这样了。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-8" class="outline-3">
+<h3 id="sec-2-8"><span class="section-number-3">2.8</span> MessageSource(国际化，资源文件)</h3>
+<div class="outline-text-3" id="text-2-8">
+<p>
+使用资源文件，实现国际化。
+</p>
+
+<p>
+如果使用资源文件，只需要自定义我们自己的资源文件处理器，即实现 MessageSource 接口。
+</p>
+
+<p>
+但 spring 提供了一些实现好的处理器，我们只需要注册使用，比如，ReloadableResourceBundleMessageSource：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">org.springframework.context.support.ReloadableResourceBundleMessageSource</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#25351;&#23450;&#25105;&#20204;&#30340;&#36164;&#28304;&#25991;&#20214;&#20026;class&#26681;&#30446;&#24405;&#19979;&#30340; message.properties &#25991;&#20214; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">basename</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">message</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">bean</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+
+<p>
+在 message[.zh_CN].properties 里面定义 k/v 形式的信息。
+</p>
+<pre class="example">
+MY_NAME = GODMAN
+NAME.ERROR = 名字错误
+</pre>
+
+<p>
+然后，就可以使用了。比如：
+</p>
+<pre class="example">
+&lt;fmt:message key="MY_NAME" /&gt;
+</pre>
+<p>
+再比如，在 JSR-303 验证里：
+</p>
+<pre class="example">
+@NotNull(message = "NAME.ERROR")
+</pre>
+<p>
+在自定义验证器里:
+</p>
+<pre class="example">
+errors.rejectValue("name", "NAME.ERROR")
+</pre>
+
+<p>
+就这样。。。简单。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-9" class="outline-3">
+<h3 id="sec-2-9"><span class="section-number-3">2.9</span> MultipartFile(文件的上传)</h3>
+<div class="outline-text-3" id="text-2-9">
+<p>
+SpringMVC 中，文件的上传，是通过 MultipartResolver 实现的。
+所以，如果要实现文件的上传，只要在 spring-mvc.xml 中注册相应的 MultipartResolver 即可。
+</p>
+
+<p>
+MultipartResolver 的实现类有两个：
+</p>
+<ol class="org-ol">
+<li>CommonsMultipartResolver
+</li>
+<li>StandardServletMultipartResolver
+</li>
+</ol>
+
+<p>
+两个的区别：
+</p>
+<ol class="org-ol">
+<li>第一个需要使用 Apache 的 commons-fileupload 等 jar 包支持，但它能在比较旧的 servlet 版本中使用。
+</li>
+<li>第二个不需要第三方 jar 包支持，它使用 servlet 内置的上传功能，但是只能在 Servlet 3 以上的版本使用。
+</li>
+</ol>
+
+<p>
+<b>以第二个为例，使用步骤：</b>
+</p>
+
+<p>
+首先，在 web.xml 中为 DispatcherServlet 配置 Multipart：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">servlet</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">servlet-name</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">mvc</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">servlet-name</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">servlet-class</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">org.springframework.web.servlet.DispatcherServlet</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">servlet-class</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">init-param</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">param-name</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">contextConfigLocation</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">param-name</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">param-value</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">classpath:spring-mvc.xml</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">param-value</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">init-param</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">load-on-startup</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">1</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">load-on-startup</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">multipart-config</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#19978;&#20256;&#25991;&#20214;&#30340;&#22823;&#23567;&#38480;&#21046;&#65292;&#27604;&#22914;&#19979;&#38754;&#34920;&#31034; 5 M </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">max-file-size</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">5242880</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">max-file-size</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#19968;&#27425;&#34920;&#21333;&#25552;&#20132;&#20013;&#25991;&#20214;&#30340;&#22823;&#23567;&#38480;&#21046;&#65292;&#24517;&#39035;&#19979;&#38754;&#20195;&#34920; 10 M </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">max-request-size</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">10485760</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">max-request-size</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-comment-delimiter">&lt;!--</span><span class="org-nxml-comment-content"> &#22810;&#22823;&#30340;&#25991;&#20214;&#20250;&#34987;&#33258;&#21160;&#20445;&#23384;&#21040;&#30828;&#30424;&#19978;&#12290;0 &#20195;&#34920;&#25152;&#26377; </span><span class="org-nxml-comment-delimiter">--&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">file-size-threshold</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">0</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">file-size-threshold</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">multipart-config</span><span class="org-nxml-tag-delimiter">&gt;</span>
+
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">servlet</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+
+
+<p>
+其次，在 spring-mvc.xml 中注册 MultipartResolver:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">multipartResolver</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">org.springframework.web.multipart.support.StandardServletMultipartResolver</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+
+
+<p>
+然后，就可以使用了，比如，表单：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-html">&lt;<span class="org-sgml-namespace">form</span>:<span class="org-function-name">form</span> <span class="org-variable-name">action</span>=<span class="org-string">"/file/upload"</span> <span class="org-variable-name">enctype</span>=<span class="org-string">"multipart/form-data"</span>&gt;
+  &lt;<span class="org-function-name">input</span> <span class="org-variable-name">type</span>=<span class="org-string">"file"</span> <span class="org-variable-name">name</span>=<span class="org-string">"mfile"</span> /&gt;
+  &lt;<span class="org-function-name">input</span> <span class="org-variable-name">type</span>=<span class="org-string">"submit"</span> <span class="org-variable-name">value</span>=<span class="org-string">"&#19978;&#20256;&#22270;&#29255;"</span> /&gt;
+&lt;/<span class="org-sgml-namespace">form</span>:<span class="org-function-name">form</span>&gt;
+</pre>
+</div>
+
+
+<p>
+于是，就可以在 Controller 里这样处理了：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-c-annotation">@PostMapping</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-string">"/upload"</span><span class="org-rainbow-delimiters-depth-1">)</span>
+<span class="org-keyword">public</span> <span class="org-type">String</span> <span class="org-function-name">upload</span><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-type">MultipartFile</span> <span class="org-variable-name">mfile</span><span class="org-rainbow-delimiters-depth-1">)</span> <span class="org-keyword">throws</span> <span class="org-type">Exception</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-type">String</span> <span class="org-variable-name">savePath</span> = ...;
+    <span class="org-keyword">if</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-negation-char">!</span>mfile.isEmpty<span class="org-rainbow-delimiters-depth-3">()</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        mfile.transferTo<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">new</span> <span class="org-type">File</span><span class="org-rainbow-delimiters-depth-4">(</span>savePath + mfile.getOriginalFilename<span class="org-rainbow-delimiters-depth-5">()</span><span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span>;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+    <span class="org-keyword">return</span> <span class="org-string">"file/index"</span>;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-sec-2-10" class="outline-3">
+<h3 id="sec-2-10"><span class="section-number-3">2.10</span> 集成 javaMail 发送邮件</h3>
+<div class="outline-text-3" id="text-2-10">
+<p>
+来一个在 SpringMVC 中通过 163 发送邮件的示例
+</p>
+
+<p>
+首先，增加 jar 包
+</p>
+<pre class="example">
+compile "org.springframework:spring-context-support:$springVersion"
+compile "javax.mail:mail:1.4.7"
+</pre>
+
+<p>
+其次，在 spring.xml 中增加 mailSender 的配置：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-xml"><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">bean</span> <span class="org-nxml-attribute-local-name">id</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">mailSender</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">class</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">org.springframework.mail.javamail.JavaMailSenderImpl</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">host</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">smtp.163.com</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">username</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">name</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">password</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-attribute-local-name">value</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">pass</span><span class="org-nxml-attribute-value-delimiter">"</span> <span class="org-nxml-tag-slash">/</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">property</span> <span class="org-nxml-attribute-local-name">name</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">javaMailProperties</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">props</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">prop</span> <span class="org-nxml-attribute-local-name">key</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">mail.transport.protocol</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">smtp</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">prop</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">prop</span> <span class="org-nxml-attribute-local-name">key</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">mail.smtp.auth</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">true</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">prop</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">prop</span> <span class="org-nxml-attribute-local-name">key</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">mail.smtp.starttls.enable</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">true</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">prop</span><span class="org-nxml-tag-delimiter">&gt;</span>
+      <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-element-local-name">prop</span> <span class="org-nxml-attribute-local-name">key</span>=<span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-attribute-value">mail.debug</span><span class="org-nxml-attribute-value-delimiter">"</span><span class="org-nxml-tag-delimiter">&gt;</span><span class="org-nxml-text">true</span><span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">prop</span><span class="org-nxml-tag-delimiter">&gt;</span>
+    <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">props</span><span class="org-nxml-tag-delimiter">&gt;</span>
+  <span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">property</span><span class="org-nxml-tag-delimiter">&gt;</span>
+<span class="org-nxml-tag-delimiter">&lt;</span><span class="org-nxml-tag-slash">/</span><span class="org-nxml-element-local-name">bean</span><span class="org-nxml-tag-delimiter">&gt;</span>
+</pre>
+</div>
+
+
+<p>
+最后，在代码中使用:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-c-annotation">@Service</span>
+<span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">UserService</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+
+    <span class="org-c-annotation">@Resource</span> <span class="org-keyword">private</span> <span class="org-type">MailSender</span> <span class="org-variable-name">mailSender</span>;
+
+    <span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">sendMailDemo</span><span class="org-rainbow-delimiters-depth-2">()</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-type">SimpleMailMessage</span> <span class="org-variable-name">mailMsg</span> = <span class="org-keyword">new</span> <span class="org-type">SimpleMailMessage</span><span class="org-rainbow-delimiters-depth-3">()</span>;
+        mailMsg.setFrom<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"xxx@163.com"</span><span class="org-rainbow-delimiters-depth-3">)</span>;   <span class="org-comment-delimiter">// </span><span class="org-comment">&#21457;&#20214;&#20154;</span>
+        mailMsg.setTo<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"12345@qq.com"</span><span class="org-rainbow-delimiters-depth-3">)</span>;    <span class="org-comment-delimiter">// </span><span class="org-comment">&#25910;&#20214;&#20154;</span>
+        mailMsg.setSubject<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"test"</span><span class="org-rainbow-delimiters-depth-3">)</span>;       <span class="org-comment-delimiter">// </span><span class="org-comment">&#37038;&#20214;&#26631;&#39064;</span>
+        mailMsg.setText<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"&#27979;&#35797;&#37038;&#20214;"</span><span class="org-rainbow-delimiters-depth-3">)</span>;       <span class="org-comment-delimiter">// </span><span class="org-comment">&#21457;&#36865;&#20869;&#23481;</span>
+
+        mailSender.send<span class="org-rainbow-delimiters-depth-3">(</span>mailMsg<span class="org-rainbow-delimiters-depth-3">)</span>;         <span class="org-comment-delimiter">// </span><span class="org-comment">&#21457;&#36865;</span>
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+</div>
+</div>
+</section>
+
+<section id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Spring Data JPA</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> step by step</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+使用 spring data jpa，只需要下面几步:
+</p>
+</div>
+
+<div id="outline-container-sec-3-1-1" class="outline-4">
+<h4 id="sec-3-1-1"><span class="section-number-4">3.1.1</span> 引入 Spring data 的 jar 包</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+在 build.gradle 里面，增加 jpa 的 starter
+</p>
+<pre class="example">
+compile('org.springframework.boot:spring-boot-starter-data-jpa')
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-3-1-2" class="outline-4">
+<h4 id="sec-3-1-2"><span class="section-number-4">3.1.2</span> 实现我们自己的接口</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-keyword">interface</span> <span class="org-type">MyRepository</span> <span class="org-keyword">extends</span> <span class="org-type">JpaRepository</span><span class="org-rainbow-delimiters-depth-1">&lt;</span><span class="org-type">Book</span>, <span class="org-type">Long</span><span class="org-rainbow-delimiters-depth-1">&gt;</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-1-3" class="outline-4">
+<h4 id="sec-3-1-3"><span class="section-number-4">3.1.3</span> 实现我们的自定义方法</h4>
+<div class="outline-text-4" id="text-3-1-3">
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-keyword">interface</span> <span class="org-type">MyRepository</span> <span class="org-keyword">extends</span> <span class="org-type">JpaRepository</span><span class="org-rainbow-delimiters-depth-1">&lt;</span><span class="org-type">Book</span>, <span class="org-type">Long</span><span class="org-rainbow-delimiters-depth-1">&gt;</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+
+    <span class="org-comment-delimiter">/* </span><span class="org-comment">&#31532; 1 &#31181;&#26041;&#24335;&#65292;&#20154;&#24037;&#26234;&#33021; */</span>
+
+    <span class="org-keyword">public</span> <span class="org-type">List</span><span class="org-rainbow-delimiters-depth-2">&lt;</span><span class="org-type">Book</span><span class="org-rainbow-delimiters-depth-2">&gt;</span> <span class="org-function-name">findBookByPrice</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">Float</span> <span class="org-variable-name">price</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+    <span class="org-c-annotation">@Nullable</span> <span class="org-type">List</span><span class="org-rainbow-delimiters-depth-2">&lt;</span><span class="org-type">Person</span><span class="org-rainbow-delimiters-depth-2">&gt;</span> <span class="org-function-name">findByEmailAddressAndLastname</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">EmailAddress</span> <span class="org-variable-name">emailAddress</span>, <span class="org-type">String</span> <span class="org-variable-name">lastname</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+    <span class="org-type">List</span><span class="org-rainbow-delimiters-depth-2">&lt;</span><span class="org-type">Person</span><span class="org-rainbow-delimiters-depth-2">&gt;</span> <span class="org-function-name">findByLastnameAndFirstnameAllIgnoreCase</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">String</span> <span class="org-variable-name">lastname</span>, <span class="org-type">String</span> <span class="org-variable-name">firstname</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+    <span class="org-type">List</span><span class="org-rainbow-delimiters-depth-2">&lt;</span><span class="org-type">Person</span><span class="org-rainbow-delimiters-depth-2">&gt;</span> <span class="org-function-name">findByLastnameOrderByFirstnameAsc</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">String</span> <span class="org-variable-name">lastname</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+    <span class="org-type">List</span><span class="org-rainbow-delimiters-depth-2">&lt;</span><span class="org-type">Person</span><span class="org-rainbow-delimiters-depth-2">&gt;</span> <span class="org-function-name">findByLastnameOrderByFirstnameDesc</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">String</span> <span class="org-variable-name">lastname</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+
+
+    <span class="org-comment-delimiter">/* </span><span class="org-comment">&#31532; 2 &#31181;&#26041;&#24335;&#65292;NameQuery - &#25163;&#21160;&#35774;&#32622;&#26597;&#35810;&#35821;&#21477; */</span>
+
+    <span class="org-c-annotation">@Query</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"select * from Book where name = ?1"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-keyword">public</span> <span class="org-type">List</span><span class="org-rainbow-delimiters-depth-2">&lt;</span><span class="org-type">Book</span><span class="org-rainbow-delimiters-depth-2">&gt;</span> <span class="org-function-name">findBookByName</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">String</span> <span class="org-variable-name">name</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+
+    <span class="org-c-annotation">@Query</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"select u from User u where u.emailAddress = :email"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-type">User</span> <span class="org-function-name">findByEmailAddress</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-c-annotation">@Param</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"email"</span><span class="org-rainbow-delimiters-depth-3">)</span> <span class="org-type">String</span> <span class="org-variable-name">emailAddress</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+
+    <span class="org-c-annotation">@Query</span><span class="org-rainbow-delimiters-depth-2">(</span>value = <span class="org-string">"SELECT * FROM USERS WHERE EMAIL_ADDRESS = ?1"</span>, nativeQuery = <span class="org-constant">true</span><span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-type">User</span> <span class="org-function-name">findByEmailAddress</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">String</span> <span class="org-variable-name">emailAddress</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+
+    <span class="org-c-annotation">@Query</span><span class="org-rainbow-delimiters-depth-2">(</span>value = <span class="org-string">"SELECT * FROM USERS WHERE LASTNAME = ?1"</span>,
+           countQuery = <span class="org-string">"SELECT count(*) FROM USERS WHERE LASTNAME = ?1"</span>,
+           nativeQuery = <span class="org-constant">true</span><span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-type">Page</span><span class="org-rainbow-delimiters-depth-2">&lt;</span><span class="org-type">User</span><span class="org-rainbow-delimiters-depth-2">&gt;</span> <span class="org-function-name">findByLastname</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">String</span> <span class="org-variable-name">lastname</span>, <span class="org-type">Pageable</span> <span class="org-variable-name">pageable</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+
+
+    <span class="org-comment-delimiter">/* </span><span class="org-comment">&#31532; 3 &#31181;&#65292;&#20462;&#25913;&#25968;&#25454; */</span>
+    <span class="org-c-annotation">@Modifying</span> <span class="org-c-annotation">@Query</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"update User u set u.firstname = ?1 where u.lastname = ?2"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-type">int</span> <span class="org-function-name">setFixedFirstnameFor</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">String</span> <span class="org-variable-name">firstname</span>, <span class="org-type">String</span> <span class="org-variable-name">lastname</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+
+    <span class="org-c-annotation">@Modifying</span> <span class="org-c-annotation">@Query</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"delete from User u where user.role.id = ?1"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-type">void</span> <span class="org-function-name">deleteInBulkByRoleId</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">long</span> <span class="org-variable-name">roleId</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+
+
+    <span class="org-comment-delimiter">/* </span><span class="org-comment">&#21478;&#22806;&#65292;&#21487;&#20197;&#35774;&#32622;&#20998;&#39029;&#12289;&#25490;&#24207;&#21442;&#25968;*/</span>
+
+    <span class="org-type">List</span><span class="org-rainbow-delimiters-depth-2">&lt;</span><span class="org-type">User</span><span class="org-rainbow-delimiters-depth-2">&gt;</span> <span class="org-function-name">findByLastname</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">String</span> <span class="org-variable-name">lastname</span>, <span class="org-type">Sort</span> <span class="org-variable-name">sort</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+    <span class="org-type">List</span><span class="org-rainbow-delimiters-depth-2">&lt;</span><span class="org-type">User</span><span class="org-rainbow-delimiters-depth-2">&gt;</span> <span class="org-function-name">findByLastname</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">String</span> <span class="org-variable-name">lastname</span>, <span class="org-type">Pageable</span> <span class="org-variable-name">pageable</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+    repo.findByLastname<span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"stark"</span>, <span class="org-keyword">new</span> <span class="org-type">Sort</span><span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"LENGTH(firstname)"</span><span class="org-rainbow-delimiters-depth-3">)</span><span class="org-rainbow-delimiters-depth-2">)</span>;
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-1-4" class="outline-4">
+<h4 id="sec-3-1-4"><span class="section-number-4">3.1.4</span> 调用</h4>
+<div class="outline-text-4" id="text-3-1-4">
+<div class="org-src-container">
+
+<pre class="src src-java"><span class="org-c-annotation">@Controller</span>
+<span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">BookController</span> <span class="org-rainbow-delimiters-depth-1">{</span>
+    <span class="org-c-annotation">@Autowired</span>
+    <span class="org-keyword">private</span> <span class="org-type">MyRepository</span> <span class="org-variable-name">myRepository</span>;
+
+    <span class="org-c-annotation">@RequestMapping</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"/index"</span><span class="org-rainbow-delimiters-depth-2">)</span>
+    <span class="org-keyword">public</span> <span class="org-type">String</span> <span class="org-function-name">index</span><span class="org-rainbow-delimiters-depth-2">()</span> <span class="org-rainbow-delimiters-depth-2">{</span>
+        <span class="org-type">List</span><span class="org-rainbow-delimiters-depth-3">&lt;</span><span class="org-type">Book</span><span class="org-rainbow-delimiters-depth-3">&gt;</span> <span class="org-variable-name">books</span> = myRepository.findBookByName<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"&#25112;&#20105;&#19982;&#21644;&#24179;"</span><span class="org-rainbow-delimiters-depth-3">)</span>;
+        <span class="org-keyword">return</span> ...;
+    <span class="org-rainbow-delimiters-depth-2">}</span>
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> More</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+<b>Interfaces:</b>
+</p>
+<ul class="org-ul">
+<li>Repository
+</li>
+<li>CrudRepository
+</li>
+<li>JpaRepository
+</li>
+</ul>
+
+<p>
+<b>Methods:</b>
+</p>
+<ul class="org-ul">
+<li>NamedQuery
+</li>
+<li>Method Created
+</li>
+</ul>
+
+<p>
+<b>PageAndSort:</b>
+</p>
+<ul class="org-ul">
+<li>Pagable
+</li>
+<li>Sort
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> 人工智能关键词示例</h3>
+<div class="outline-text-3" id="text-3-3">
+<table>
+
+
+<colgroup>
+<col  class="left">
+
+<col  class="left">
+
+<col  class="left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">关键词</th>
+<th scope="col" class="left">示例</th>
+<th scope="col" class="left">JPQL 语句</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">And</td>
+<td class="left">findByLastnameAndFirstname</td>
+<td class="left">… where x.lastname = ?1 and x.firstname = ?2</td>
+</tr>
+
+<tr>
+<td class="left">Or</td>
+<td class="left">findByLastnameOrFirstname</td>
+<td class="left">… where x.lastname = ?1 or x.firstname = ?2</td>
+</tr>
+
+<tr>
+<td class="left">Is,Equals</td>
+<td class="left">findByFirstname[Is/Equals]</td>
+<td class="left">… where x.firstname = ?1</td>
+</tr>
+
+<tr>
+<td class="left">Between</td>
+<td class="left">findByStartDateBetween</td>
+<td class="left">… where x.startDate between ?1 and ?2</td>
+</tr>
+
+<tr>
+<td class="left">LessThan</td>
+<td class="left">findByAgeLessThan</td>
+<td class="left">… where x.age &lt; ?1</td>
+</tr>
+
+<tr>
+<td class="left">LessThanEqual</td>
+<td class="left">findByAgeLessThanEqual</td>
+<td class="left">… where x.age &lt;= ?1</td>
+</tr>
+
+<tr>
+<td class="left">GreaterThan</td>
+<td class="left">findByAgeGreaterThan</td>
+<td class="left">… where x.age &gt; ?1</td>
+</tr>
+
+<tr>
+<td class="left">GreaterThanEqual</td>
+<td class="left">findByAgeGreaterThanEqual</td>
+<td class="left">… where x.age &gt;= ?1</td>
+</tr>
+
+<tr>
+<td class="left">After</td>
+<td class="left">findByStartDateAfter</td>
+<td class="left">… where x.startDate &gt; ?1</td>
+</tr>
+
+<tr>
+<td class="left">Before</td>
+<td class="left">findByStartDateBefore</td>
+<td class="left">… where x.startDate &lt; ?1</td>
+</tr>
+
+<tr>
+<td class="left">IsNull</td>
+<td class="left">findByAgeIsNull</td>
+<td class="left">… where x.age is null</td>
+</tr>
+
+<tr>
+<td class="left">IsNotNull,NotNull</td>
+<td class="left">findByAge(Is)NotNull</td>
+<td class="left">… where x.age not null</td>
+</tr>
+
+<tr>
+<td class="left">Like</td>
+<td class="left">findByFirstnameLike</td>
+<td class="left">… where x.firstname like ?1</td>
+</tr>
+
+<tr>
+<td class="left">NotLike</td>
+<td class="left">findByFirstnameNotLike</td>
+<td class="left">… where x.firstname not like ?1</td>
+</tr>
+
+<tr>
+<td class="left">StartingWith</td>
+<td class="left">findByFirstnameStartingWith</td>
+<td class="left">… where x.firstname like ?1 (parameter bound with appended %)</td>
+</tr>
+
+<tr>
+<td class="left">EndingWith</td>
+<td class="left">findByFirstnameEndingWith</td>
+<td class="left">… where x.firstname like ?1 (parameter bound with prepended %)</td>
+</tr>
+
+<tr>
+<td class="left">Containing</td>
+<td class="left">findByFirstnameContaining</td>
+<td class="left">… where x.firstname like ?1 (parameter bound wrapped in %)</td>
+</tr>
+
+<tr>
+<td class="left">OrderBy</td>
+<td class="left">findByAgeOrderByLastnameDesc</td>
+<td class="left">… where x.age = ?1 order by x.lastname desc</td>
+</tr>
+
+<tr>
+<td class="left">Not</td>
+<td class="left">findByLastnameNot</td>
+<td class="left">… where x.lastname &lt;&gt; ?1</td>
+</tr>
+
+<tr>
+<td class="left">In</td>
+<td class="left">findByAgeIn(Collection&lt;Age&gt; ages)</td>
+<td class="left">… where x.age in ?1</td>
+</tr>
+
+<tr>
+<td class="left">NotIn</td>
+<td class="left">findByAgeNotIn(Collection&lt;Age&gt; ages)</td>
+<td class="left">… where x.age not in ?1</td>
+</tr>
+
+<tr>
+<td class="left">True</td>
+<td class="left">findByActiveTrue()</td>
+<td class="left">… where x.active = true</td>
+</tr>
+
+<tr>
+<td class="left">False</td>
+<td class="left">findByActiveFalse()</td>
+<td class="left">… where x.active = false</td>
+</tr>
+
+<tr>
+<td class="left">IgnoreCase</td>
+<td class="left">findByFirstnameIgnoreCase</td>
+<td class="left">… where UPPER(x.firstame) = UPPER(?1)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: imfine</p>
+<p class="date">Created: 2018-03-30 Fri 15:20</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation">Go ahead, never stop.</p>
+</div>
+</body>
+</html>

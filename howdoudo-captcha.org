@@ -1,5 +1,5 @@
 #+TITLE: 验证码
-
+#+SETUPFILE: setup.org
 
 * 前言
 

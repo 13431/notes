@@ -1,4 +1,5 @@
 #+TITLE: Linux 基础教程
+#+SETUPFILE: setup.org
 
 * 虚拟机
 ** VirtualBox

@@ -1,6 +1,5 @@
-#+TITLE: MISCELLANEOUS
-
-
+#+TITLE: 其他
+#+SETUPFILE: setup.org
 
 * Junit
 | 注解         | 解释                               |

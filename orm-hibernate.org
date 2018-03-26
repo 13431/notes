@@ -1,4 +1,5 @@
 #+TITLE: Hibernate
+#+SETUPFILE: setup.org
 
 * 序
 创建 hibernate 工程示例：

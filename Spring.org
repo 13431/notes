@@ -1,4 +1,5 @@
 #+TITLE: Spring Data tutor
+#+SETUPFILE: setup.org
 
 
 * Spring AOP

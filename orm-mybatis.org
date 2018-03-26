@@ -1,5 +1,5 @@
 #+TITLE: MyBatis 教程
-
+#+SETUPFILE: setup.org
 
 * 我也不知道怎么记笔记。想到哪，写到哪吧。
 

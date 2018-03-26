@@ -1,4 +1,6 @@
-#+TITLE: 常用工具
+#+TITLE: 版本控制工具
+#+SETUPFILE: setup.org
+
 
 * GIT
 Linus:
@@ -6,11 +8,12 @@ Linus:
 I'm an egotistical bastard, and I name all my projects after myself. First Linux, now git.
 #+END_QUOTE
 
-官方指南:
-- https://git-scm.com/book/zh/v2
 
-一图胜千言:
-- [[file:GIT/git_2017-06-28_03-15-27_2018-03-21_08-55-36.png]]
+- 官方指南: :: https://git-scm.com/book/zh/v2
+
+
+- 一图胜千言: :: 
+  [[file:assets/image/GIT/git_2017-06-28_03-15-27_2018-03-21_08-55-36.png]]
 
 
 
@@ -37,8 +40,6 @@ git pull
 #+END_SRC
 
 这是 Git 的一个教程，大家有时间可以按照上面的看看、练练，以后务必掌握基本用法： [[http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000][Git 廖雪峰 教程]]
-
-
 
 
 下面总结了一下常用的基本命令：
@@ -128,7 +129,6 @@ git pull
   git push origin master                              # 本地的 master 分支有更新，同步到远程分支
 #+END_SRC
 
-
 * Subversion
 首先，下载可爱的小乌龟:
 : wget https://nchc.dl.sourceforge.net/project/tortoisesvn/1.9.5/Application/TortoiseSVN-1.9.5.27581-x64-svn-1.9.5.msi
@@ -174,4 +174,8 @@ git pull
 
 导入文件夹到项目，可以用 import 命令：
 : svn import ~/hello svn://ip/hello
+
+* Miscellaneous
+** Java 流行框架
+https://github.com/akullpp/awesome-java
 

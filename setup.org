@@ -1,0 +1,2 @@
+#+HTML_HEAD: <link rel="stylesheet" href="assets/v.css">
+#+HTML_HEAD: <script src="assets/v.js"></script>

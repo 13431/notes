@@ -1,4 +1,5 @@
 #+TITLE: Oracle 数据库
+#+SETUPFILE: setup.org
 
 
 数据库本质是用计算机存储数据的一种系统。
@@ -148,7 +149,7 @@
   | gender | number |
   |--------+--------|
   | 男     | 46     |
-  | 女     | 10     | 
+  | 女     | 10     |
 - 给 emp 中的人加工资，请写出相关语句:
   | 条件       | 加多少 |
   |------------+--------|
@@ -160,7 +161,7 @@
 - 计算你们从入学到现在过了多少个周末
 - 计算你们从现在到毕业还有多少天，还有多少个周末
 - 计算你们在学校的时间内，每天花费多少钱
-  
+
 ** 查询各种工作中的最低工资
 看到最低、最大、平均之类的题目，首先想到的是分组函数的使用。
 
@@ -198,7 +199,7 @@
   select e.* from emp e, dept d
     where d.deptno = e.deptno
           and d.loc='CHICAGO';
-  
+
 
   ---- 第二步，基于上面结果，筛选出最有钱的那个
 
@@ -206,7 +207,7 @@
   select e.* from emp e, dept d
     where e.deptno = d.deptno
           and d.loc='CHICAGO'
-          and sal = 
+          and sal =
               (select max(sal) from emp e, dept d
                 where e.deptno = d.deptno
                       and d.loc='CHICAGO');
@@ -240,7 +241,7 @@
 
 3. 将上面查询出的不符合条件的部门排除掉
    : select distinct deptno from emp
-   :  where deptno not in 
+   :  where deptno not in
    :   (select deptno from emp where sal < 1000);
 
 4. 修改上面语句，增加最终的条件，查询所有的其他信息
@@ -275,7 +276,7 @@
          max(sal),   -- 最高工资
          min(sal)    -- 最低工资
     from emp group by deptno         -- 按照部门分组，进行统计
-             having avg(sal) > 2000; -- 只显示平均工资大于 2000 的分组  
+             having avg(sal) > 2000; -- 只显示平均工资大于 2000 的分组
 #+END_SRC
 
 
@@ -352,7 +353,7 @@
 1. 先用 e-r 图，将实体的关系表述出来。
 
    这样的图能帮助我们理清思路，并能帮助团队间的有效交流。
-   
+
    一定在图画好之后再去着手数据库表的创建。要秉承先设计后实现的思路。
 
    你可以用一些知名的工具(如 visio)去画，也可以手动在纸上画。
@@ -362,7 +363,7 @@
 3. 也可以进一步根据实体关系和表，创建相应的 Java 实体类。进一步可以 DAO，进一步可以 Service【可选】
 
 4. 最后，将图跟语句一起上交。这个过程着重思考下项目从设计到编码是怎么一个过程。
-   : 需求分析 -> *概要设计* -> 详细实现。 
+   : 需求分析 -> *概要设计* -> 详细实现。
 
 ** 博客管理系统
 首先，设计一个博客表(=blog=), 至少有下面字段
@@ -660,7 +661,7 @@ oradata/
      -- 为日志组 增加/删除 成员
      alter database add  logfile member 'd:/ssss.log' to group 1;
      alter database drop logfile member 'd:/ssss.log';
-   
+
      -- 重命名文件
      -- 首先，在文件夹管理器里，将文件改名，比如，改为 ssss.redolog
      -- 其次，重启数据库到 mount 状态，然后执行重命名命令
@@ -838,7 +839,7 @@ https://docs.oracle.com/cd/B28359_01/server.111/b28318/physical.htm#CNCPT1082
 | FAILED_LOGIN_ATTEMPTS     | password | 允许的密码输错次数                        |
 | PASSWORD_LOCK_TIME        | password | 因输错密码锁定的天数(天)                  |
 | PASSWORD_VERIFY_FUNCTION  | password | 用于自定义密码验证                        |
-  
+
 
 操作示例：
 #+BEGIN_SRC sql
@@ -881,7 +882,7 @@ https://docs.oracle.com/cd/B28359_01/server.111/b28318/physical.htm#CNCPT1082
     failed_login_attempts 3
     password_life_time    unlimited
     sessions_per_user     2;
- 
+
  -- 将资源文件分配给用户，也可以在创建用户的时候指定
   alter user profile vip_profile;
 #+END_SRC
@@ -1092,7 +1093,7 @@ https://docs.oracle.com/cd/B28359_01/server.111/b28318/physical.htm#CNCPT1082
 
     -- 插入的时候，多余的小数会被切掉，但如果整数位超了，会报错
     insert into bbb values (111.223, 111.223, 111.223, 111.223, 22);
-      
+
     -- 一般情况下，作为表的主键，设为 int 类型就可以了
   #+END_SRC
 
@@ -1318,7 +1319,7 @@ Union / UnionAll / Intersect / Minus
 
 
   -- 增加另一个表
-  create table gp (id int primary key, name varchar2(20), logo varchar2(10)); 
+  create table gp (id int primary key, name varchar2(20), logo varchar2(10));
   alter table person add  (gpid int references gp);
   -- 修改每个人的 group
   -- update ..
@@ -1339,7 +1340,7 @@ Union / UnionAll / Intersect / Minus
       and g.name='和平'
       and p.name like '王%';
 
-  -- 
+  --
   -- oracle 写法，非标准
   select * from person p, loc l, gp g
     where p.locid = l.id and p.gpid = g.id;
@@ -1373,11 +1374,11 @@ Union / UnionAll / Intersect / Minus
 - sin/cos/ln/log   数学函数
 
 *** Charactor
-- chr/ascii   ascii码      
+- chr/ascii   ascii码
 - length/lengthb   字符/字节长度
-- initcap/upper/lower   字母大小写   
-- substr/translate/replace/instr   子串/替换    
-- ltrim/rtrim/lpad/rpad   修剪/填充    
+- initcap/upper/lower   字母大小写
+- substr/translate/replace/instr   子串/替换
+- ltrim/rtrim/lpad/rpad   修剪/填充
 
 *** Datetime
 #+BEGIN_SRC sql
@@ -1421,15 +1422,15 @@ Union / UnionAll / Intersect / Minus
   select name, decode(gender, 1, '雄性',
                               2, '雌性',
                                  '未知性别') "性别" from sss;
-  -- 2. case when 的方式                               
+  -- 2. case when 的方式
   select name, case gender
                   when 1 then '雄性'
                   when 2 then '雌性'
                     else '未知性别'
                end "性别" from sss;
 
-  -- 3. case when 的另一种方式             
-  select name, case 
+  -- 3. case when 的另一种方式
+  select name, case
                   when gender <= 1 then '雄性'
                   when gender >= 2 then '雌性'
                     else '未知性别'
@@ -1640,7 +1641,7 @@ PS: 如果存在分析函数(row_number etc)，那么，分析函数的执行会
 
   ---- 第二种方式，在建表的字段上直接建立约束
   create table ddl_test4
-  ( 
+  (
      id int primary key,
      name varchar2(20) not null,
      sex constraint hello250 references ddl_sex
@@ -1652,7 +1653,7 @@ PS: 如果存在分析函数(row_number etc)，那么，分析函数的执行会
      id int,
      name varchar2(20) not null,
      sex int,
-     
+
      constraint hello260 primary key(id),
      foreign key (sex) references ddl_sex
    );
@@ -1968,10 +1969,10 @@ PS: 如果存在分析函数(row_number etc)，那么，分析函数的执行会
   );
   insert into person values ('aaa', to_date('19871212', 'yyyymmdd'));
   select * from person partition (p1);
-    
 
-  /* 
-  where birth between 1987 and 1990 
+
+  /*
+  where birth between 1987 and 1990
   where sex in ('男', '女')
   ,*/
 
@@ -2166,7 +2167,7 @@ PS: 如果存在分析函数(row_number etc)，那么，分析函数的执行会
   create materialized view log on emp [with rowid/primary key];
   -- 然后就可以指定增量同步的方式了
   create materialized view mv_emp2
-     build immediate 
+     build immediate
      refresh fast                       -- 采取增量同步的方式
      on demand sysdate next sysdate + 1 -- 每天更新一次，on demand 后面还有其他很多不同形式的命令
      enable query rewrite
@@ -2225,7 +2226,7 @@ PS: 如果存在分析函数(row_number etc)，那么，分析函数的执行会
     -- 变量赋值
     name := 'Tom';
     age := 12;
-    
+
     dbms_output.put_line('您好，' || name);
     dbms_output.put_line('您是 ' || name || ', 你现在 ' || age || ' 岁。');
   end;
@@ -2239,9 +2240,9 @@ PS: 如果存在分析函数(row_number etc)，那么，分析函数的执行会
   begin
     name := 'Tom';
     age := 12;
-    
+
     result := 10/0;
-    
+
     dbms_output.put_line('您好，' || name);
     dbms_output.put_line('您是 ' || name || ', 你现在 ' || age || ' 岁。');
   exception
@@ -2261,9 +2262,9 @@ PS: 如果存在分析函数(row_number etc)，那么，分析函数的执行会
   begin
     name := 'Tom';
     age := 12;
-    
+
     result := 10/0;
-    
+
     dbms_output.put_line('您好，' || name);
     dbms_output.put_line('您是 ' || name || ', 你现在 ' || age || ' 岁。');
   exception
@@ -2303,7 +2304,7 @@ PS: 如果存在分析函数(row_number etc)，那么，分析函数的执行会
       WHEN no_data_found THEN
         dbms_output.put_line('ccc');
     END;
-    
+
     dbms_output.put_line('bbb');
   EXCEPTION
     WHEN no_data_found THEN
@@ -2367,9 +2368,9 @@ PS: 如果存在分析函数(row_number etc)，那么，分析函数的执行会
   -- pl/sql
   DECLARE
     begin_time timestamp;
-  BEGIN 
+  BEGIN
     begin_time := systimestamp;
-    
+
     FOR i IN 1..100003 LOOP
       insert into haha values (seq_haha.nextval, 'X_' || dbms_random.string('U', 10));
       if mod(i, 1000) = 0 then
@@ -2455,14 +2456,14 @@ PS: 如果存在分析函数(row_number etc)，那么，分析函数的执行会
     -- 打开游标
     open c_emp;
     -- 提取游标当前数据
-    
+
     fetch c_emp into vemp;
     loop
       dbms_output.put_line(vemp.ename || '的工资是' || vemp.sal);
       fetch c_emp into vemp;
       exit when c_emp%notfound;
     end loop;
-   
+
     -- 关闭游标
     close c_emp;
   end;
@@ -2586,7 +2587,7 @@ PS: 如果存在分析函数(row_number etc)，那么，分析函数的执行会
   declare
     s number;
     c number;
-  begin 
+  begin
     pxxx('KING', s, c);
     dbms_output.put_line(s || '----' || c);
   end;
@@ -2657,4 +2658,3 @@ imp/exp 命令
 
 * hint/explain
 * Data Guard/RAC
-

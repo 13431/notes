@@ -1,6 +1,5 @@
 #+TITLE: 分页(Pagination)
-
-
+#+SETUPFILE: setup.org
 
 
 * Paginator 使用

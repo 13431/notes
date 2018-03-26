@@ -1,5 +1,5 @@
 #+TITLE: Struts2
-
+#+SETUPFILE: setup.org
 
 * 序
 Struts 是一个 MVC 框架，它的核心是 *拦截器* 和 *值栈*:

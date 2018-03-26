@@ -1,16 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>常用工具</title>
-<!-- 2018-03-26 周一 08:31 -->
+<title>版本控制工具</title>
+<!-- 2018-03-30 Fri 15:19 -->
 <meta  charset="utf-8">
 <meta  name="generator" content="Org-mode">
 <meta  name="author" content="imfine">
-<meta  name="viewport" content="width=device-width,initial-scale=1">
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" href="assets/v.css">
+<script src="assets/v.js"></script>
 </head>
 <body>
-<div id="content">
-<h1 class="title">常用工具</h1>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href=""> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">版本控制工具</h1>
 <nav id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
@@ -21,9 +106,15 @@
 <li><a href="#sec-2-1">2.1. 搭建服务器</a></li>
 </ul>
 </li>
+<li><a href="#sec-3">3. Miscellaneous</a>
+<ul>
+<li><a href="#sec-3-1">3.1. Java 流行框架</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </nav>
+
 
 <section id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1"><span class="section-number-2">1</span> GIT</h2>
@@ -37,21 +128,17 @@ I'm an egotistical bastard, and I name all my projects after myself. First Linux
 </p>
 </blockquote>
 
-<p>
-官方指南:
-</p>
-<ul class="org-ul">
-<li><a href="https://git-scm.com/book/zh/v2">https://git-scm.com/book/zh/v2</a>
-</li>
-</ul>
 
-<p>
-一图胜千言:
-</p>
-<ul class="org-ul">
-<li><img src="GIT/git_2017-06-28_03-15-27_2018-03-21_08-55-36.png" alt="git_2017-06-28_03-15-27_2018-03-21_08-55-36.png">
-</li>
-</ul>
+<dl class="org-dl">
+<dt> 官方指南: </dt><dd><a href="https://git-scm.com/book/zh/v2">https://git-scm.com/book/zh/v2</a>
+</dd>
+</dl>
+
+
+<dl class="org-dl">
+<dt> 一图胜千言: </dt><dd>  <img src="assets/image/GIT/git_2017-06-28_03-15-27_2018-03-21_08-55-36.png" alt="git_2017-06-28_03-15-27_2018-03-21_08-55-36.png">
+</dd>
+</dl>
 
 <p>
 
@@ -90,8 +177,6 @@ git pull
 <p>
 这是 Git 的一个教程，大家有时间可以按照上面的看看、练练，以后务必掌握基本用法： <a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000">Git 廖雪峰 教程</a>
 </p>
-
-
 
 
 <p>
@@ -185,7 +270,6 @@ git push origin master                              <span class="org-comment-del
 </div>
 </div>
 </section>
-
 
 <section id="outline-container-sec-2" class="outline-2">
 <h2 id="sec-2"><span class="section-number-2">2</span> Subversion</h2>
@@ -287,10 +371,23 @@ svn import ~/hello svn://ip/hello
 </div>
 </div>
 </section>
+
+<section id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Miscellaneous</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Java 流行框架</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+<a href="https://github.com/akullpp/awesome-java">https://github.com/akullpp/awesome-java</a>
+</p>
+</div>
+</div>
+</section>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: imfine</p>
-<p class="date">Created: 2018-03-26 周一 08:31</p>
+<p class="date">Created: 2018-03-30 Fri 15:19</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation">Go ahead, never stop.</p>
 </div>
