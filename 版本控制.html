@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>常用工具</title>
+<!-- 2018-03-26 周一 08:31 -->
+<meta  charset="utf-8">
+<meta  name="generator" content="Org-mode">
+<meta  name="author" content="imfine">
+<meta  name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<div id="content">
+<h1 class="title">常用工具</h1>
+<nav id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. GIT</a></li>
+<li><a href="#sec-2">2. Subversion</a>
+<ul>
+<li><a href="#sec-2-1">2.1. 搭建服务器</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+
+<section id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> GIT</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Linus:
+</p>
+<blockquote>
+<p>
+I'm an egotistical bastard, and I name all my projects after myself. First Linux, now git.
+</p>
+</blockquote>
+
+<p>
+官方指南:
+</p>
+<ul class="org-ul">
+<li><a href="https://git-scm.com/book/zh/v2">https://git-scm.com/book/zh/v2</a>
+</li>
+</ul>
+
+<p>
+一图胜千言:
+</p>
+<ul class="org-ul">
+<li><img src="GIT/git_2017-06-28_03-15-27_2018-03-21_08-55-36.png" alt="git_2017-06-28_03-15-27_2018-03-21_08-55-36.png">
+</li>
+</ul>
+
+<p>
+
+</p>
+
+<p>
+Git 是一个版本控制工具，它能实现团队中的代码协作开发，在代码同步和管理方面功能强大、理念先进。
+</p>
+
+<p>
+Git 是当下最流行的分布式版本控制工具，轻量级，但功能强大，由 linux 之父 linus 开发。它的使用特别广泛，尤其开源社区基本都用它作为版本控制工具。我们每个人也要尽量掌握它。
+</p>
+
+<p>
+而网站 github.com 是基于 git 工具的一个代码托管网站，目前基本所有知名的开源项目都选择把代码部署到这个网站。这里的代码包罗万象，是个学习的天堂。实属居家旅行、杀人拿塔的必备网站。
+</p>
+
+<p>
+我们自己的 github 主页是 <a href="https://github.com/13431">github.com/13431</a> 大家可以直接用浏览器访问。 如果想用 git 工具下载同步代码，方法如下：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">1. &#36827;&#20837; git bash&#65292;&#20999;&#25442;&#21040;&#30456;&#24212;&#30446;&#24405;&#65292;&#27604;&#22914;&#65292;e &#30424;&#19979;&#30340; course &#30446;&#24405;&#65306;</span>
+<span class="org-builtin">cd</span> /e/course/
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">2. &#22914;&#26524;&#26159;&#31532;&#19968;&#27425;&#19979;&#36733;&#65292;&#25191;&#34892;&#20197;&#19979;&#21629;&#20196;</span>
+git clone https://github.com/13431/notes.git
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">3. &#22914;&#26524;&#19981;&#26159;&#31532;&#19968;&#27425;&#19979;&#36733;&#65292;&#21482;&#26159;&#26356;&#26032;&#20195;&#30721;&#65292;&#25191;&#34892;&#20197;&#19979;&#21629;&#20196;&#12290;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">ps. &#35201;&#32463;&#24120;&#36816;&#34892;&#36825;&#20010;&#21629;&#20196;&#65292;&#20445;&#25345;&#19982;&#26381;&#21153;&#22120;&#30340;&#21516;&#27493;</span>
+<span class="org-builtin">cd</span> /e/course/notes/
+git pull
+</pre>
+</div>
+
+<p>
+这是 Git 的一个教程，大家有时间可以按照上面的看看、练练，以后务必掌握基本用法： <a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000">Git 廖雪峰 教程</a>
+</p>
+
+
+
+
+<p>
+下面总结了一下常用的基本命令：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span class="org-comment-delimiter">## </span><span class="org-comment">&#20462;&#25913; .gitconfig &#25991;&#20214;&#65292;&#36825;&#26159; git &#30340;&#37197;&#32622;&#25991;&#20214;</span>
+vi ~/.gitconfig
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">&#21021;&#22987;&#21270; &#29256;&#26412;&#24211;</span>
+git init
+git init-db
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">&#28155;&#21152;&#24573;&#30053;&#25991;&#20214;&#12290;&#36825;&#20010;&#25991;&#20214;&#25511;&#21046;&#65292;&#21738;&#20123;&#25991;&#20214;&#19981;&#35201;&#34987;&#25552;&#20132;</span>
+<span class="org-builtin">echo</span> <span class="org-string">"*.svn"</span> &gt; .gitignore
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">&#23558;&#25913;&#21464;&#22686;&#21152;&#33267;&#32034;&#24341;</span>
+git add .
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">&#20174;&#32034;&#24341;&#20889;&#20837;&#21040;&#24211;</span>
+git commit -m <span class="org-string">"&#25552;&#20132;&#21040;&#29256;&#26412;&#24211;"</span>
+git commit -a -m <span class="org-string">"&#25552;&#20132;&#65292;&#36830;&#21516;&#25152;&#26377;&#26410; add &#30340;&#20462;&#25913;&#25991;&#20214;"</span>
+git commit --amend -a -m <span class="org-string">"&#26367;&#25442;&#26368;&#21518;&#19968;&#27425;&#30340;&#25552;&#20132;&#20449;&#24687;"</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">&#26597;&#30475;&#20462;&#25913;&#20102;&#20160;&#20040;&#19996;&#35199;</span>
+git diff
+git diff --cached
+git status
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">&#22238;&#25764;&#29256;&#26412;&#65292;&#37325;&#26032;&#25552;&#20132;&#12290;&#21518;&#24724;&#33647;&#12290;</span>
+git reset HEAD^           <span class="org-comment-delimiter"># </span><span class="org-comment">&#22238;&#25764;&#21040;&#19978;&#19968;&#29256;&#26412;&#65292;&#40664;&#35748;&#26159; --mix &#24418;&#24335;&#65292;&#21478;&#26377; --soft &#21644; --hard &#24418;&#24335;</span>
+git status                <span class="org-comment-delimiter"># </span><span class="org-comment">&#21487;&#20197;&#30475;&#21040;&#65292;&#19978;&#19968;&#29256;&#26412;&#25552;&#20132;&#30340;&#25991;&#20214;&#27809;&#26377;&#22686;&#21152;&#21040; index &#30340;&#29366;&#24577;</span>
+git add/commit...         <span class="org-comment-delimiter"># </span><span class="org-comment">&#20570;&#23436;&#22788;&#29702;&#21518;&#65292;&#37325;&#26032;&#25552;&#20132;</span>
+
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">&#26597;&#30475;&#26085;&#24535;&#65292;&#21382;&#21490;&#35760;&#24405;</span>
+git show
+git log
+git log --pretty=oneline  <span class="org-comment-delimiter"># </span><span class="org-comment">&#23450;&#21046; log &#30340;&#26174;&#31034;&#26679;&#24335;</span>
+git log -2 -p             <span class="org-comment-delimiter"># </span><span class="org-comment">&#26174;&#31034;&#26368;&#36817;&#20004;&#27425;&#25552;&#20132;&#30340;&#35814;&#32454;&#20449;&#24687;</span>
+git log --stat --summary  <span class="org-comment-delimiter"># </span><span class="org-comment">&#31616;&#35201;&#26174;&#31034;&#27599;&#27425;&#26356;&#26032;&#30340;&#32479;&#35745;&#20449;&#24687;&#65288;&#25552;&#20132;&#36807;&#37027;&#20123;&#25991;&#20214;&#65292;&#26377;&#22810;&#23569;&#34892;&#20462;&#25913;&#65289;</span>
+git log --graph --pretty=format:<span class="org-string">'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset'</span> --abbrev-commit
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">&#22686;&#21152;/&#26597;&#30475;/&#20999;&#25442;/&#21024;&#38500; &#20998;&#25903;</span>
+git branch                <span class="org-comment-delimiter"># </span><span class="org-comment">&#26597;&#30475;&#20998;&#25903;</span>
+git branch 13431          <span class="org-comment-delimiter"># </span><span class="org-comment">&#21019;&#24314;&#20998;&#25903; 13431</span>
+git branch 13431 343223   <span class="org-comment-delimiter"># </span><span class="org-comment">&#20197; 343223 &#20026;&#36215;&#28857;&#21019;&#24314; 13431 &#20998;&#25903;</span>
+git checkout 13431        <span class="org-comment-delimiter"># </span><span class="org-comment">&#20999;&#25442;&#21040;&#20998;&#25903; 13431</span>
+git checkout -b tmp       <span class="org-comment-delimiter"># </span><span class="org-comment">&#21019;&#24314;&#24182;&#20999;&#25442;&#21040;&#20998;&#25903; tmp</span>
+git branch -D tmp         <span class="org-comment-delimiter"># </span><span class="org-comment">&#21024;&#38500;&#20998;&#25903; tmp</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">&#21512;&#24182;&#24037;&#20316;&#21040;&#20027;&#20998;&#25903;(13431 -&gt; master)</span>
+git checkout master       <span class="org-comment-delimiter"># </span><span class="org-comment">&#20999;&#25442;&#21040;&#20027;&#20998;&#25903;</span>
+git merge HEAD 13431      <span class="org-comment-delimiter"># </span><span class="org-comment">&#23558; 13431 &#30340;&#26368;&#26032;&#29256;&#26412;&#21512;&#24182;&#21040;&#24403;&#21069;&#20998;&#25903;</span>
+git pull . 13431          <span class="org-comment-delimiter"># </span><span class="org-comment">&#30456;&#24403;&#20110; git fetch &amp;&amp; git merge</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">&#29983;&#25104;&#24182;&#24212;&#29992;&#34917;&#19969;&#65292;&#36825;&#26159;&#21478;&#22806;&#19968;&#20010;&#21512;&#24182;&#24037;&#20316;&#30340;&#26041;&#27861;&#12290;&#26242;&#26102;&#19981;&#38656;&#35201;&#25630;&#22826;&#28165;&#26970;&#12290;</span>
+git format-patch master &gt; A.patch
+git checkout master       <span class="org-comment-delimiter"># </span><span class="org-comment">&#20808;&#29983;&#25104;&#34917;&#19969;&#25991;&#20214;&#65292;&#20877;&#20999;&#25442;&#21040;&#20998;&#25903;&#30446;&#24405;</span>
+git apply A.patch         <span class="org-comment-delimiter"># </span><span class="org-comment">&#24212;&#29992;&#34917;&#19969;&#25991;&#20214;&#21040;&#24403;&#21069;&#20998;&#25903;</span>
+git add/commit...         <span class="org-comment-delimiter"># </span><span class="org-comment">&#28982;&#21518;&#25552;&#20132;&#20462;&#25913;</span>
+
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">&#19979;&#36733;/&#19978;&#20256;/&#26356;&#26032; &#20449;&#24687;&#21040;&#25351;&#23450;&#29256;&#26412;&#24211;</span>
+git clone git://192.168.1.1/repo.git
+git push git://192.168.1.1/repo.git 13431:master
+git pull git://192.168.1.1/repo.git master:13431
+git fetch public
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">&#20854;&#20182;&#21629;&#20196;&#65306;</span>
+git tag                   <span class="org-comment-delimiter"># </span><span class="org-comment">&#23558;&#26576;&#20010;&#29256;&#26412;&#20570;&#20010;&#26631;&#35760;&#65292;&#21363;&#36171;&#20104;&#19968;&#20010;&#22909;&#35760;&#30340;&#21517;&#23383;</span>
+git gc                    <span class="org-comment-delimiter"># </span><span class="org-comment">&#22403;&#22334;&#25910;&#38598;&#65292;&#33021;&#22823;&#22823;&#20943;&#23567;&#29256;&#26412;&#24211;&#22823;&#23567;</span>
+git repack                <span class="org-comment-delimiter"># </span><span class="org-comment">&#21516;&#19978;&#65292;&#20063;&#33021;&#22823;&#22823;&#20943;&#23567;&#29256;&#26412;&#24211;&#22823;&#23567;</span>
+git ls-tree HEAD          <span class="org-comment-delimiter"># </span><span class="org-comment">&#26597;&#30475;&#29256;&#26412;&#24211;&#20013;&#30340;&#25991;&#20214;&#32467;&#26500;&#65292;&#19979;&#38754;&#35821;&#21477;&#26159;&#36319; awk &#21512;&#20316;&#65292;&#25171;&#21360;&#25972;&#20010;&#30446;&#24405;&#32467;&#26500;</span>
+git ls-tree -r HEAD | awk <span class="org-string">'{print $4}'</span> &gt; d:/home/index/repTree
+git whatchanged           <span class="org-comment-delimiter"># </span><span class="org-comment">&#26174;&#31034;&#26576;&#20010;&#29256;&#26412;&#25913;&#21464;&#20102;&#21738;&#20123;&#25991;&#20214;</span>
+git show-branch           <span class="org-comment-delimiter"># </span><span class="org-comment">&#26174;&#31034;&#20998;&#25903;&#21464;&#21160;&#24773;&#20917;</span>
+git reflog                <span class="org-comment-delimiter"># </span><span class="org-comment">&#26174;&#31034;&#25152;&#26377;&#21464;&#26356;&#21382;&#21490;(&#36319; git log &#19981;&#21516;)</span>
+git clone                 <span class="org-comment-delimiter"># </span><span class="org-comment">&#30456;&#24403;&#20110; git init &amp;&amp; git fetch</span>
+git pull                  <span class="org-comment-delimiter"># </span><span class="org-comment">&#30456;&#24403;&#20110; git fetch &amp;&amp; git merge</span>
+git rebase                <span class="org-comment-delimiter"># </span><span class="org-comment">git merge &#22806;&#65292;&#21512;&#24182;&#20179;&#24211;&#30340;&#21478;&#19968;&#31181;&#24418;&#24335;</span>
+
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">&#19979;&#38754;&#30340;&#20363;&#23376;&#26159;&#24314;&#31435;&#19968;&#20010;&#32431;&#20179;&#24211;&#65292;&#24182;&#20316;&#20026;&#24320;&#21457;&#30340;&#20013;&#24515;&#20179;&#24211;&#65288;&#21363; GIT &#26381;&#21153;&#31471;&#65289;</span>
+git clone --bare /workspace/hnpmi /repo/13431.git   <span class="org-comment-delimiter"># </span><span class="org-comment">&#21019;&#24314;&#19968;&#20010;&#26032;&#30340;&#32431;&#20179;&#24211;&#65292;&#29992;&#20110;&#22791;&#20221;&#12289;&#20849;&#20139;</span>
+<span class="org-builtin">cd</span> /workspace/13431                                 <span class="org-comment-delimiter"># </span><span class="org-comment">&#36825;&#26159;&#25105;&#20204;&#30340;&#24037;&#20316;&#30446;&#24405;</span>
+git remote add origin /repo/13431.git               <span class="org-comment-delimiter"># </span><span class="org-comment">&#23558;&#21018;&#25165;&#26032;&#24314;&#30340;&#20179;&#24211;&#28155;&#21152;&#20026;&#25105;&#20204;&#30340;&#36828;&#31243;&#20998;&#25903;</span>
+git push origin master                              <span class="org-comment-delimiter"># </span><span class="org-comment">&#26412;&#22320;&#30340; master &#20998;&#25903;&#26377;&#26356;&#26032;&#65292;&#21516;&#27493;&#21040;&#36828;&#31243;&#20998;&#25903;</span>
+</pre>
+</div>
+</div>
+</section>
+
+
+<section id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Subversion</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+首先，下载可爱的小乌龟:
+</p>
+<pre class="example">
+wget https://nchc.dl.sourceforge.net/project/tortoisesvn/1.9.5/Application/TortoiseSVN-1.9.5.27581-x64-svn-1.9.5.msi
+</pre>
+
+<p>
+其次，如果想使用 svn 从服务器上下载东西:
+</p>
+<pre class="example">
+svn checkout http://svn.apache.org/repos/asf/struts/struts2
+svn co http://svn.apache.org/repos/asf/struts/struts2
+</pre>
+
+<p>
+如果想同步代码:
+</p>
+<pre class="example">
+svn update
+</pre>
+
+<p>
+查看当前代码的修改情况：
+</p>
+<pre class="example">
+svn status
+svn st
+</pre>
+
+<p>
+如果想提交代码:
+</p>
+<pre class="example">
+svn commit -m 我的注释
+svn ci -m "My Message"
+</pre>
+
+<p>
+查看日志
+</p>
+<pre class="example">
+svn log
+</pre>
+
+<p>
+寻求帮助
+</p>
+<pre class="example">
+svn --help
+svn update --help
+</pre>
+</div>
+
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 搭建服务器</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+首先，创建一个 svn 库:
+</p>
+<pre class="example">
+svnadmin create /var/svn/aaa
+</pre>
+
+<p>
+修改下面的 conf/svnserver.conf 文件，将下面几条注释去掉
+</p>
+<pre class="example">
+anon-access = read       # 匿名用户只能读，不能改
+anon-access = write      # 已登录用户，可以修改
+password-db = passwd     # 指明验证文件的名字
+</pre>
+
+<p>
+其次，开启服务：
+</p>
+<pre class="example">
+svnserve --daemon --root /tmp/bbb
+</pre>
+
+<p>
+然后，就可以访问了
+</p>
+<pre class="example">
+svn co svn://ip
+</pre>
+
+<p>
+导入文件夹到项目，可以用 import 命令：
+</p>
+<pre class="example">
+svn import ~/hello svn://ip/hello
+</pre>
+</div>
+</div>
+</section>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: imfine</p>
+<p class="date">Created: 2018-03-26 周一 08:31</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation">Go ahead, never stop.</p>
+</div>
+</body>
+</html>

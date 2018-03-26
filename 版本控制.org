@@ -10,7 +10,7 @@ I'm an egotistical bastard, and I name all my projects after myself. First Linux
 - https://git-scm.com/book/zh/v2
 
 一图胜千言:
-- -[[file:GIT/git_2017-06-28_03-15-27_2018-03-21_08-55-36.png]]
+- [[file:GIT/git_2017-06-28_03-15-27_2018-03-21_08-55-36.png]]
 
 
 
